@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { Order } from '@/types';
 import { getPackageSizeLabel } from '@/types';
 import NewOrderModal from '@/components/NewOrderModal';
+import { getOrders } from '@/actions/orders';
 
 export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -14,11 +15,8 @@ export default function Home() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('/api/orders');
-      if (response.ok) {
-        const data = await response.json();
-        setOrders(data);
-      }
+      const data = await getOrders();
+      setOrders(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {

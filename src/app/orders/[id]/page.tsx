@@ -1,38 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Card, CardBody, CardHeader, Spinner, Accordion, AccordionItem, Chip } from '@heroui/react';
 import type { Order, Attempt } from '@/types';
 import { getPackageSizeLabel } from '@/types';
 import AttemptForm from '@/components/AttemptForm';
+import { getOrder, getAttempts, deleteAttempt } from '@/actions/orders';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const orderId = params.id as string;
+  const orderId = Number(params.id as string);
 
   const [order, setOrder] = useState<Order | null>(null);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const fetchOrderData = async () => {
     try {
-      const [orderRes, attemptsRes] = await Promise.all([
-        fetch(`/api/orders/${orderId}`),
-        fetch(`/api/orders/${orderId}/attempts`),
+      const [orderData, attemptsData] = await Promise.all([
+        getOrder(orderId),
+        getAttempts(orderId),
       ]);
 
-      if (orderRes.ok) {
-        const orderData = await orderRes.json();
-        setOrder(orderData);
-      }
-
-      if (attemptsRes.ok) {
-        const attemptsData = await attemptsRes.json();
-        setAttempts(attemptsData);
-      }
+      setOrder(orderData);
+      setAttempts(attemptsData);
     } catch (error) {
       console.error('Error fetching order data:', error);
     } finally {
@@ -54,19 +49,14 @@ export default function OrderDetailPage() {
     }
 
     setDeletingId(attemptId);
-    try {
-      const response = await fetch(`/api/attempts/${attemptId}`, {
-        method: 'DELETE',
-      });
+    startTransition(async () => {
+      const result = await deleteAttempt(attemptId, orderId);
 
-      if (response.ok) {
+      if (result.success) {
         fetchOrderData();
       }
-    } catch (error) {
-      console.error('Error deleting attempt:', error);
-    } finally {
       setDeletingId(null);
-    }
+    });
   };
 
   const formatDateTime = (dateString: string) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import {
   Modal,
   ModalContent,
@@ -21,6 +21,7 @@ import {
   type CreateOrderInput,
 } from '@/types';
 import ParameterInput from './ParameterInput';
+import { createOrder } from '@/actions/orders';
 
 interface NewOrderModalProps {
   isOpen: boolean;
@@ -35,8 +36,8 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
   const [packageSize, setPackageSize] = useState('3');
   const [sackovacka, setSackovacka] = useState('');
   const [note, setNote] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async () => {
     if (!orderCode.trim() || !materialType || !sackovacka) {
@@ -44,10 +45,9 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
       return;
     }
 
-    setLoading(true);
     setError('');
 
-    try {
+    startTransition(async () => {
       const orderData: CreateOrderInput = {
         order_code: orderCode.trim(),
         material_type: materialType,
@@ -57,15 +57,9 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
         note: note.trim() || undefined,
       };
 
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
+      const result = await createOrder(orderData);
 
-      if (response.ok) {
+      if (result.success) {
         // Reset form
         setOrderCode('');
         setMaterialType('');
@@ -75,18 +69,9 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
         setNote('');
         onSuccess();
       } else {
-        const data = await response.json();
-        if (response.status === 409) {
-          setError('Zakázka s tímto kódem již existuje');
-        } else {
-          setError(data.error || 'Nepodařilo se vytvořit zakázku');
-        }
+        setError(result.error || 'Nepodařilo se vytvořit zakázku');
       }
-    } catch (err) {
-      setError('Chyba při komunikaci se serverem');
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
@@ -263,12 +248,12 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
           <Button
             color="primary"
             onPress={handleSubmit}
-            isLoading={loading}
+            isLoading={isPending}
             isDisabled={!orderCode || !materialType || !sackovacka}
             size="lg"
             className="flex-1 md:flex-none h-12 font-semibold"
           >
-            {loading ? 'Vytváření...' : '🚀 Vytvořit zakázku'}
+            {isPending ? 'Vytváření...' : '🚀 Vytvořit zakázku'}
           </Button>
         </ModalFooter>
       </ModalContent>

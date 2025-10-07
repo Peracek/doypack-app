@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Button, RadioGroup, Radio, Textarea, Card, CardBody, CardHeader, Divider } from '@heroui/react';
 import type { CreateAttemptInput } from '@/types';
 import ParameterInput from './ParameterInput';
+import { createAttempt } from '@/actions/orders';
 
 interface AttemptFormProps {
   orderId: number;
@@ -44,8 +45,8 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
 
   const [outcome, setOutcome] = useState<'Úspěch' | 'Neúspěch'>('Neúspěch');
   const [note, setNote] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   const handleCopyFromE = () => {
     // Copy values from Side E to all other side phases
@@ -67,10 +68,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
     setError('');
 
-    try {
+    startTransition(async () => {
       const attemptData: CreateAttemptInput = {
         order_id: orderId,
         outcome,
@@ -98,28 +98,17 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
         note: note.trim() || undefined,
       };
 
-      const response = await fetch(`/api/orders/${orderId}/attempts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(attemptData),
-      });
+      const result = await createAttempt(orderId, attemptData);
 
-      if (response.ok) {
+      if (result.success) {
         // Reset form to defaults
         setOutcome('Neúspěch');
         setNote('');
         onSuccess();
       } else {
-        const data = await response.json();
-        setError(data.error || 'Nepodařilo se uložit pokus');
+        setError(result.error || 'Nepodařilo se uložit pokus');
       }
-    } catch (err) {
-      setError('Chyba při komunikaci se serverem');
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
@@ -472,10 +461,10 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           color="primary"
           size="lg"
           onPress={handleSubmit}
-          isLoading={loading}
+          isLoading={isPending}
           className="w-full h-14 text-lg font-bold"
         >
-          {loading ? 'Ukládání...' : 'Uložit pokus'}
+          {isPending ? 'Ukládání...' : 'Uložit pokus'}
         </Button>
       </div>
     </div>

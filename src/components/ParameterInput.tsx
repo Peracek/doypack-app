@@ -39,7 +39,7 @@ export default function ParameterInput({
     if (unit === 'bar') return 'secondary'; // Pressure - purple
     if (unit === 's') return 'primary'; // Dwell time - blue
     if (unit === '%') return 'warning'; // Percentage - yellow
-    return 'default';
+    return 'primary'; // Default to primary instead of 'default'
   };
 
   return (

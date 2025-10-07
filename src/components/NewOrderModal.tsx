@@ -12,6 +12,7 @@ import {
   Select,
   SelectItem,
   Textarea,
+  Divider,
 } from '@heroui/react';
 import {
   MATERIAL_OPTIONS,
@@ -132,7 +133,9 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
               />
             </div>
 
-            <div className="border-t pt-4">
+            <Divider className="my-4" />
+
+            <div>
               <h3 className="text-lg font-semibold mb-4">🏭 Parametry materiálu a tisku</h3>
               <div className="space-y-4">
                 {/* Material Type */}
@@ -222,8 +225,10 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
               </div>
             </div>
 
+            <Divider className="my-4" />
+
             {/* Note */}
-            <div className="border-t pt-4">
+            <div>
               <h3 className="text-lg font-semibold mb-3">📝 Poznámka</h3>
               <Textarea
                 label="Poznámka k zakázce (nepovinné)"

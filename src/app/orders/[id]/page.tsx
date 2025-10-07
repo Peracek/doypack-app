@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Button, Card, CardBody, CardHeader, Spinner, Accordion, AccordionItem } from '@heroui/react';
+import { Button, Card, CardBody, CardHeader, Spinner, Accordion, AccordionItem, Chip } from '@heroui/react';
 import type { Order, Attempt } from '@/types';
 import { getPackageSizeLabel } from '@/types';
 import AttemptForm from '@/components/AttemptForm';
@@ -183,7 +183,6 @@ export default function OrderDetailPage() {
             <CardBody className="pt-2">
               <Accordion variant="splitted" className="px-0">
                 {attempts.map((attempt, index) => {
-                  const outcomeEmoji = attempt.outcome === 'Úspěch' ? '✅' : '❌';
                   const hasMultiphase = attempt.zipper_temperature_c !== null;
 
                   return (
@@ -192,9 +191,15 @@ export default function OrderDetailPage() {
                       title={
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-lg">{outcomeEmoji}</span>
+                            <Chip
+                              color={attempt.outcome === 'Úspěch' ? 'success' : 'danger'}
+                              variant="flat"
+                              size="sm"
+                            >
+                              {attempt.outcome === 'Úspěch' ? '✅' : '❌'} {attempt.outcome}
+                            </Chip>
                             <span className="font-semibold text-base">
-                              Pokus {index + 1} - {attempt.outcome}
+                              Pokus {index + 1}
                             </span>
                           </div>
                           <span className="text-xs sm:text-sm text-gray-500">

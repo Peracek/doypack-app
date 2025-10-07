@@ -185,7 +185,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               onChange={setZipperDwell}
               min={0.1}
               max={3.0}
-              step={0.1}
+              step={0.01}
               unit="s"
               icon="⏱️"
             />
@@ -229,7 +229,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               onChange={setBottomDwell}
               min={0.1}
               max={3.0}
-              step={0.1}
+              step={0.01}
               unit="s"
               icon="⏱️"
             />
@@ -330,7 +330,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 onChange={setSideEDwell}
                 min={0.1}
                 max={3.0}
-                step={0.1}
+                step={0.01}
                 unit="s"
                 icon="⏱️"
               />
@@ -408,7 +408,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 onChange={setSideDDwell}
                 min={0.1}
                 max={3.0}
-                step={0.1}
+                step={0.01}
                 unit="s"
                 icon="⏱️"
               />
@@ -486,7 +486,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 onChange={setSideCDwell}
                 min={0.1}
                 max={3.0}
-                step={0.1}
+                step={0.01}
                 unit="s"
                 icon="⏱️"
               />
@@ -564,7 +564,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 onChange={setSideBDwell}
                 min={0.1}
                 max={3.0}
-                step={0.1}
+                step={0.01}
                 unit="s"
                 icon="⏱️"
               />
@@ -642,7 +642,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 onChange={setSideADwell}
                 min={0.1}
                 max={3.0}
-                step={0.1}
+                step={0.01}
                 unit="s"
                 icon="⏱️"
               />

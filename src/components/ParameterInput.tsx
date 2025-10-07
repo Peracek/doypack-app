@@ -58,7 +58,7 @@ export default function ParameterInput({
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+      <label className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
         {icon && <span>{icon}</span>}
         {label}
       </label>
@@ -70,7 +70,7 @@ export default function ParameterInput({
           variant="flat"
           onPress={handleDecrement}
           isDisabled={value <= min}
-          className="min-w-12 h-12 text-xl font-bold"
+          className="min-w-12 h-12 text-xl font-bold text-gray-900 dark:text-gray-100"
         >
           −
         </Button>
@@ -84,9 +84,9 @@ export default function ParameterInput({
           min={min}
           max={max}
           step={step}
-          endContent={unit && <span className="text-sm text-gray-500">{unit}</span>}
+          endContent={unit && <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{unit}</span>}
           classNames={{
-            input: 'text-center text-lg font-semibold',
+            input: 'text-center text-lg font-bold text-gray-900 dark:text-gray-100',
             inputWrapper: 'h-12',
           }}
           variant="bordered"
@@ -99,14 +99,14 @@ export default function ParameterInput({
           variant="flat"
           onPress={handleIncrement}
           isDisabled={value >= max}
-          className="min-w-12 h-12 text-xl font-bold"
+          className="min-w-12 h-12 text-xl font-bold text-gray-900 dark:text-gray-100"
         >
           +
         </Button>
       </div>
 
       {/* Range indicator */}
-      <div className="flex justify-between text-xs text-gray-500 px-1">
+      <div className="flex justify-between text-xs font-medium text-gray-600 dark:text-gray-400 px-1">
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>

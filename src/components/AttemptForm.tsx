@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, RadioGroup, Radio, Textarea, Accordion, AccordionItem } from '@heroui/react';
+import { Button, RadioGroup, Radio, Textarea, Card, CardBody, CardHeader, Divider } from '@heroui/react';
 import type { CreateAttemptInput } from '@/types';
 import ParameterInput from './ParameterInput';
 
@@ -144,26 +144,17 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
         </RadioGroup>
       </div>
 
-      {/* Collapsible Parameter Sections */}
-      <Accordion
-        variant="splitted"
-        defaultExpandedKeys={['zipper', 'bottom', 'sides']}
-        className="px-0"
-      >
+      {/* Parameter Sections */}
+      <div className="space-y-4">
         {/* Zipper Phase */}
-        <AccordionItem
-          key="zipper"
-          title={
+        <Card className="border-2 border-blue-500 dark:border-blue-400">
+          <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔗</span>
-              <span className="font-semibold">Svár zip</span>
+              <span className="font-semibold text-blue-600 dark:text-blue-400">Svár zip</span>
             </div>
-          }
-          classNames={{
-            title: 'text-blue-600 dark:text-blue-400',
-          }}
-        >
-          <div className="space-y-4 p-4">
+          </CardHeader>
+          <CardBody className="space-y-4">
             <ParameterInput
               label="Teplota"
               value={zipperTemp}
@@ -194,23 +185,18 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               unit="s"
               icon="⏱️"
             />
-          </div>
-        </AccordionItem>
+          </CardBody>
+        </Card>
 
         {/* Bottom Phase */}
-        <AccordionItem
-          key="bottom"
-          title={
+        <Card className="border-2 border-green-500 dark:border-green-400">
+          <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">⬇️</span>
-              <span className="font-semibold">Svár dno</span>
+              <span className="font-semibold text-green-600 dark:text-green-400">Svár dno</span>
             </div>
-          }
-          classNames={{
-            title: 'text-green-600 dark:text-green-400',
-          }}
-        >
-          <div className="space-y-4 p-4">
+          </CardHeader>
+          <CardBody className="space-y-4">
             <ParameterInput
               label="Teplota"
               value={bottomTemp}
@@ -241,23 +227,18 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               unit="s"
               icon="⏱️"
             />
-          </div>
-        </AccordionItem>
+          </CardBody>
+        </Card>
 
         {/* Side Phases */}
-        <AccordionItem
-          key="sides"
-          title={
+        <Card className="border-2 border-purple-500 dark:border-purple-400">
+          <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔷</span>
-              <span className="font-semibold">Příčné sváry (Věže)</span>
+              <span className="font-semibold text-purple-600 dark:text-purple-400">Příčné sváry (Věže)</span>
             </div>
-          }
-          classNames={{
-            title: 'text-purple-600 dark:text-purple-400',
-          }}
-        >
-          <div className="space-y-6 p-4">
+          </CardHeader>
+          <CardBody className="space-y-6">
             {/* Copy Button */}
             <Button
               color="secondary"
@@ -453,20 +434,18 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="⏱️"
               />
             </div>
-          </div>
-        </AccordionItem>
+          </CardBody>
+        </Card>
 
         {/* Note */}
-        <AccordionItem
-          key="note"
-          title={
+        <Card className="border-2">
+          <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">📝</span>
               <span className="font-semibold">Poznámka (nepovinné)</span>
             </div>
-          }
-        >
-          <div className="p-4">
+          </CardHeader>
+          <CardBody>
             <Textarea
               placeholder="Zadejte jakékoliv poznámky k tomuto pokusu..."
               value={note}
@@ -477,9 +456,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 input: 'text-base',
               }}
             />
-          </div>
-        </AccordionItem>
-      </Accordion>
+          </CardBody>
+        </Card>
+      </div>
 
       {error && (
         <div className="p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 rounded-lg">

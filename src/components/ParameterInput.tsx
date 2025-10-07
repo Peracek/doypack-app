@@ -33,6 +33,15 @@ export default function ParameterInput({
     onChange(newValue);
   };
 
+  // Determine color based on unit
+  const getColor = () => {
+    if (unit === '°C') return 'danger'; // Temperature - red/orange
+    if (unit === 'bar') return 'secondary'; // Pressure - purple
+    if (unit === 's') return 'primary'; // Dwell time - blue
+    if (unit === '%') return 'warning'; // Percentage - yellow
+    return 'default';
+  };
+
   return (
     <Slider
       label={
@@ -46,8 +55,8 @@ export default function ParameterInput({
       minValue={min}
       maxValue={max}
       step={step}
+      color={getColor()}
       showTooltip
-      showSteps={step >= 1}
       getValue={(val) => `${typeof val === 'number' ? val : val[0]}${unit}`}
       startContent={
         <Button

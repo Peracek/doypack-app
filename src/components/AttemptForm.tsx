@@ -1,10 +1,19 @@
-'use client';
+"use client";
 
-import { useState, useTransition } from 'react';
-import { Button, RadioGroup, Radio, Textarea, Card, CardBody, CardHeader, Divider } from '@heroui/react';
-import type { CreateAttemptInput } from '@/types';
-import ParameterInput from './ParameterInput';
-import { createAttempt } from '@/actions/orders';
+import { useState, useTransition } from "react";
+import {
+  Button,
+  RadioGroup,
+  Radio,
+  Textarea,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+} from "@heroui/react";
+import type { CreateAttemptInput } from "@/types";
+import ParameterInput from "./ParameterInput";
+import { createAttempt } from "@/actions/orders";
 
 interface AttemptFormProps {
   orderId: number;
@@ -48,9 +57,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   const [sideAPressure, setSideAPressure] = useState(4.6);
   const [sideADwell, setSideADwell] = useState(1.3);
 
-  const [outcome, setOutcome] = useState<'Úspěch' | 'Neúspěch'>('Neúspěch');
-  const [note, setNote] = useState('');
-  const [error, setError] = useState('');
+  const [outcome, setOutcome] = useState<"Úspěch" | "Neúspěch">("Neúspěch");
+  const [note, setNote] = useState("");
+  const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const handleCopyFromE = () => {
@@ -77,7 +86,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   };
 
   const handleSubmit = async () => {
-    setError('');
+    setError("");
 
     startTransition(async () => {
       const attemptData: CreateAttemptInput = {
@@ -116,37 +125,17 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
 
       if (result.success) {
         // Reset form to defaults
-        setOutcome('Neúspěch');
-        setNote('');
+        setOutcome("Neúspěch");
+        setNote("");
         onSuccess();
       } else {
-        setError(result.error || 'Nepodařilo se uložit pokus');
+        setError(result.error || "Nepodařilo se uložit pokus");
       }
     });
   };
 
   return (
     <div className="space-y-4 pb-24">
-      {/* Outcome Selection - Always visible at top */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700">
-        <h4 className="text-md font-semibold mb-3">🎯 Výsledek pokusu</h4>
-        <RadioGroup
-          value={outcome}
-          onValueChange={(value) => setOutcome(value as 'Úspěch' | 'Neúspěch')}
-          orientation="horizontal"
-          classNames={{
-            wrapper: 'gap-4',
-          }}
-        >
-          <Radio value="Neúspěch" classNames={{ base: 'flex-1 max-w-none' }}>
-            <span className="text-base">❌ Neúspěch</span>
-          </Radio>
-          <Radio value="Úspěch" classNames={{ base: 'flex-1 max-w-none' }}>
-            <span className="text-base">✅ Úspěch</span>
-          </Radio>
-        </RadioGroup>
-      </div>
-
       {/* Parameter Sections */}
       <div className="space-y-4">
         {/* Zipper Phase */}
@@ -154,7 +143,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔗</span>
-              <span className="font-semibold text-blue-600 dark:text-blue-400">Svár zip</span>
+              <span className="font-semibold text-blue-600 dark:text-blue-400">
+                Svár zip
+              </span>
             </div>
           </CardHeader>
           <CardBody className="space-y-4">
@@ -196,7 +187,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">⬇️</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">Svár dno</span>
+              <span className="font-semibold text-green-600 dark:text-green-400">
+                Svár dno
+              </span>
             </div>
           </CardHeader>
           <CardBody className="space-y-4">
@@ -238,7 +231,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔷</span>
-              <span className="font-semibold text-purple-600 dark:text-purple-400">Příčné sváry (Věže)</span>
+              <span className="font-semibold text-purple-600 dark:text-purple-400">
+                Příčné sváry (Věže)
+              </span>
             </div>
           </CardHeader>
           <CardBody className="space-y-6">
@@ -506,11 +501,32 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               variant="bordered"
               minRows={4}
               classNames={{
-                input: 'text-base',
+                input: "text-base",
               }}
             />
           </CardBody>
         </Card>
+
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700">
+          <h4 className="text-md font-semibold mb-3">🎯 Výsledek pokusu</h4>
+          <RadioGroup
+            value={outcome}
+            onValueChange={(value) =>
+              setOutcome(value as "Úspěch" | "Neúspěch")
+            }
+            orientation="horizontal"
+            classNames={{
+              wrapper: "gap-4",
+            }}
+          >
+            <Radio value="Neúspěch" classNames={{ base: "flex-1 max-w-none" }}>
+              <span className="text-base">❌ Neúspěch</span>
+            </Radio>
+            <Radio value="Úspěch" classNames={{ base: "flex-1 max-w-none" }}>
+              <span className="text-base">✅ Úspěch</span>
+            </Radio>
+          </RadioGroup>
+        </div>
       </div>
 
       {error && (
@@ -528,7 +544,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           isLoading={isPending}
           className="w-full h-14 text-lg font-bold"
         >
-          {isPending ? 'Ukládání...' : 'Uložit pokus'}
+          {isPending ? "Ukládání..." : "Uložit pokus"}
         </Button>
       </div>
     </div>

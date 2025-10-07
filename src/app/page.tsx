@@ -92,77 +92,36 @@ export default function Home() {
             </CardBody>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 px-2">
               📋 Seznam zakázek ({orders.length})
             </h2>
-            {orders.map((order) => (
-              <Link key={order.id} href={`/orders/${order.id}`} className="block">
-                <Card
-                  isPressable
-                  isHoverable
-                  className="hover:shadow-xl transition-all active:scale-[0.98]"
-                >
-                  <CardHeader className="flex-col items-start gap-2 pb-2">
-                    <div className="flex w-full justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                          📦 {order.order_code}
-                        </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          {formatDateTime(order.created_at)}
-                        </p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              {orders.map((order, index) => (
+                <Link key={order.id} href={`/orders/${order.id}`}>
+                  <div className={`flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors active:bg-gray-100 dark:active:bg-gray-700 ${index !== orders.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                        📦 {order.order_code}
+                      </h3>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        <span className="truncate">{order.material_type}</span>
+                        <span>•</span>
+                        <span>{getPackageSizeLabel(order.package_size)}</span>
+                        <span>•</span>
+                        <span>{order.sackovacka}</span>
                       </div>
-                      <Button
-                        color="primary"
-                        variant="flat"
-                        size="sm"
-                        className="min-h-10"
-                        as="div"
-                      >
-                        Otevřít →
-                      </Button>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                        {formatDateTime(order.created_at)}
+                      </p>
                     </div>
-                  </CardHeader>
-                  <CardBody className="pt-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Materiál</p>
-                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white line-clamp-2">
-                          {order.material_type}
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Pokrytí</p>
-                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
-                          {order.print_coverage}%
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Velikost</p>
-                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
-                          {getPackageSizeLabel(order.package_size)}
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Sáčkovačka</p>
-                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
-                          {order.sackovacka || 'N/A'}
-                        </p>
-                      </div>
+                    <div className="text-gray-400 dark:text-gray-500">
+                      →
                     </div>
-                    {order.note && (
-                      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          <strong className="font-semibold">📝 Poznámka:</strong>{' '}
-                          <span className="line-clamp-2">{order.note}</span>
-                        </p>
-                      </div>
-                    )}
-                  </CardBody>
-                </Card>
-              </Link>
-            ))}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </div>

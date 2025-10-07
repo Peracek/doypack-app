@@ -156,7 +156,7 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                 >
                   {MATERIAL_OPTIONS.map((material) => (
-                    <SelectItem key={material} value={material}>
+                    <SelectItem key={material}>
                       {material}
                     </SelectItem>
                   ))}
@@ -179,7 +179,7 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                 >
                   {PACKAGE_SIZE_OPTIONS.map((option) => (
-                    <SelectItem key={String(option.value)} value={String(option.value)}>
+                    <SelectItem key={String(option.value)}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -203,7 +203,7 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                 >
                   {SACKOVACKA_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option}>
+                    <SelectItem key={option}>
                       {option}
                     </SelectItem>
                   ))}

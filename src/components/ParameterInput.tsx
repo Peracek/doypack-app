@@ -58,6 +58,7 @@ export default function ParameterInput({
       color={getColor()}
       showTooltip
       getValue={(val) => `${typeof val === 'number' ? val : val[0]}${unit}`}
+      size='lg'
       startContent={
         <Button
           isIconOnly

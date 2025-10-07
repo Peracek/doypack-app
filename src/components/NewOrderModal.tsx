@@ -11,7 +11,6 @@ import {
   Input,
   Select,
   SelectItem,
-  Slider,
   Textarea,
 } from '@heroui/react';
 import {
@@ -20,6 +19,7 @@ import {
   SACKOVACKA_OPTIONS,
   type CreateOrderInput,
 } from '@/types';
+import ParameterInput from './ParameterInput';
 
 interface NewOrderModalProps {
   isOpen: boolean;
@@ -89,12 +89,30 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="full"
+      scrollBehavior="inside"
+      classNames={{
+        base: 'md:max-w-2xl m-0 md:m-auto',
+        wrapper: 'items-end md:items-center',
+      }}
+    >
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
+        <ModalHeader className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="text-2xl font-bold">📋 Nová zakázka</h2>
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={onClose}
+            className="md:hidden"
+            size="lg"
+          >
+            ✕
+          </Button>
         </ModalHeader>
-        <ModalBody>
+        <ModalBody className="px-6 py-6">
           <div className="space-y-6">
             {/* Order Code */}
             <div>
@@ -106,12 +124,17 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                 onValueChange={setOrderCode}
                 isRequired
                 variant="bordered"
+                size="lg"
+                classNames={{
+                  input: 'text-lg',
+                  inputWrapper: 'h-14',
+                }}
               />
             </div>
 
             <div className="border-t pt-4">
-              <h3 className="text-lg font-semibold mb-3">🏭 Parametry materiálu a tisku</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h3 className="text-lg font-semibold mb-4">🏭 Parametry materiálu a tisku</h3>
+              <div className="space-y-4">
                 {/* Material Type */}
                 <Select
                   label="Typ materiálu"
@@ -123,6 +146,11 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                   isRequired
                   variant="bordered"
+                  size="lg"
+                  classNames={{
+                    trigger: 'h-14',
+                    value: 'text-base',
+                  }}
                 >
                   {MATERIAL_OPTIONS.map((material) => (
                     <SelectItem key={material} value={material}>
@@ -141,6 +169,11 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                   isRequired
                   variant="bordered"
+                  size="lg"
+                  classNames={{
+                    trigger: 'h-14',
+                    value: 'text-base',
+                  }}
                 >
                   {PACKAGE_SIZE_OPTIONS.map((option) => (
                     <SelectItem key={String(option.value)} value={String(option.value)}>
@@ -160,6 +193,11 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                   }}
                   isRequired
                   variant="bordered"
+                  size="lg"
+                  classNames={{
+                    trigger: 'h-14',
+                    value: 'text-base',
+                  }}
                 >
                   {SACKOVACKA_OPTIONS.map((option) => (
                     <SelectItem key={option} value={option}>
@@ -167,21 +205,20 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                     </SelectItem>
                   ))}
                 </Select>
-              </div>
 
-              {/* Print Coverage Slider */}
-              <div className="mt-4">
-                <Slider
-                  label="Pokrytí tiskem v oblasti svařování (%)"
-                  value={printCoverage}
-                  onChange={(value) => setPrintCoverage(value as number)}
-                  minValue={0}
-                  maxValue={500}
-                  step={10}
-                  showSteps={false}
-                  showTooltip={true}
-                  className="max-w-full"
-                />
+                {/* Print Coverage */}
+                <div className="mt-6">
+                  <ParameterInput
+                    label="Pokrytí tiskem v oblasti svařování"
+                    value={printCoverage}
+                    onChange={setPrintCoverage}
+                    min={0}
+                    max={500}
+                    step={10}
+                    unit="%"
+                    icon="🎨"
+                  />
+                </div>
               </div>
             </div>
 
@@ -195,18 +232,27 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                 onValueChange={setNote}
                 variant="bordered"
                 minRows={3}
+                classNames={{
+                  input: 'text-base',
+                }}
               />
             </div>
 
             {error && (
-              <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg">
-                <p className="text-red-800 dark:text-red-200 text-sm">❌ {error}</p>
+              <div className="p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 rounded-lg">
+                <p className="text-red-800 dark:text-red-200 font-medium">❌ {error}</p>
               </div>
             )}
           </div>
         </ModalBody>
-        <ModalFooter>
-          <Button color="danger" variant="light" onPress={onClose}>
+        <ModalFooter className="border-t px-6 py-4">
+          <Button
+            color="danger"
+            variant="light"
+            onPress={onClose}
+            size="lg"
+            className="flex-1 md:flex-none h-12"
+          >
             Zrušit
           </Button>
           <Button
@@ -214,8 +260,10 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
             onPress={handleSubmit}
             isLoading={loading}
             isDisabled={!orderCode || !materialType || !sackovacka}
+            size="lg"
+            className="flex-1 md:flex-none h-12 font-semibold"
           >
-            🚀 Vytvořit zakázku
+            {loading ? 'Vytváření...' : '🚀 Vytvořit zakázku'}
           </Button>
         </ModalFooter>
       </ModalContent>

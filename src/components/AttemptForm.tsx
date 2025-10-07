@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Slider, RadioGroup, Radio, Textarea, Divider } from '@heroui/react';
+import { Button, RadioGroup, Radio, Textarea, Accordion, AccordionItem } from '@heroui/react';
 import type { CreateAttemptInput } from '@/types';
+import ParameterInput from './ParameterInput';
 
 interface AttemptFormProps {
   orderId: number;
@@ -122,334 +123,380 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-semibold">📋 Parametry svařování</h3>
-
-      {/* Zipper Sealing Phase */}
-      <div className="space-y-4">
-        <h4 className="text-md font-semibold text-blue-600 dark:text-blue-400">🔗 Svár zip</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Slider
-            label="Teplota (°C)"
-            value={zipperTemp}
-            onChange={(value) => setZipperTemp(value as number)}
-            minValue={100}
-            maxValue={220}
-            step={1}
-            showTooltip
-            className="max-w-full"
-          />
-          <Slider
-            label="Tlak (bar)"
-            value={zipperPressure}
-            onChange={(value) => setZipperPressure(value as number)}
-            minValue={1.0}
-            maxValue={8.0}
-            step={0.1}
-            showTooltip
-            className="max-w-full"
-          />
-          <Slider
-            label="Doba (s)"
-            value={zipperDwell}
-            onChange={(value) => setZipperDwell(value as number)}
-            minValue={0.1}
-            maxValue={3.0}
-            step={0.1}
-            showTooltip
-            className="max-w-full"
-          />
-        </div>
-      </div>
-
-      <Divider />
-
-      {/* Bottom Sealing Phase */}
-      <div className="space-y-4">
-        <h4 className="text-md font-semibold text-green-600 dark:text-green-400">⬇️ Svár dno</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Slider
-            label="Teplota (°C)"
-            value={bottomTemp}
-            onChange={(value) => setBottomTemp(value as number)}
-            minValue={100}
-            maxValue={220}
-            step={1}
-            showTooltip
-            className="max-w-full"
-          />
-          <Slider
-            label="Tlak (bar)"
-            value={bottomPressure}
-            onChange={(value) => setBottomPressure(value as number)}
-            minValue={1.0}
-            maxValue={8.0}
-            step={0.1}
-            showTooltip
-            className="max-w-full"
-          />
-          <Slider
-            label="Doba (s)"
-            value={bottomDwell}
-            onChange={(value) => setBottomDwell(value as number)}
-            minValue={0.1}
-            maxValue={3.0}
-            step={0.1}
-            showTooltip
-            className="max-w-full"
-          />
-        </div>
-      </div>
-
-      <Divider />
-
-      {/* Side Sealing Phases */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h4 className="text-md font-semibold text-purple-600 dark:text-purple-400">
-            Příčné sváry
-          </h4>
-        </div>
-
-        {/* Side E */}
-        <div className="space-y-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
-          <div className="flex justify-between items-center">
-            <h5 className="font-semibold">🔷 Věž E</h5>
-            <Button
-              size="sm"
-              color="secondary"
-              variant="flat"
-              onPress={handleCopyFromE}
-            >
-              🔗 Kopírovat do D,C,B,A
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Slider
-              label="Teplota (°C)"
-              value={sideETemp}
-              onChange={(value) => setSideETemp(value as number)}
-              minValue={100}
-              maxValue={220}
-              step={1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Tlak (bar)"
-              value={sideEPressure}
-              onChange={(value) => setSideEPressure(value as number)}
-              minValue={1.0}
-              maxValue={8.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Doba (s)"
-              value={sideEDwell}
-              onChange={(value) => setSideEDwell(value as number)}
-              minValue={0.1}
-              maxValue={3.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-          </div>
-        </div>
-
-        {/* Side D */}
-        <div className="space-y-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
-          <h5 className="font-semibold">🔶 Věž D</h5>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Slider
-              label="Teplota (°C)"
-              value={sideDTemp}
-              onChange={(value) => setSideDTemp(value as number)}
-              minValue={100}
-              maxValue={220}
-              step={1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Tlak (bar)"
-              value={sideDPressure}
-              onChange={(value) => setSideDPressure(value as number)}
-              minValue={1.0}
-              maxValue={8.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Doba (s)"
-              value={sideDDwell}
-              onChange={(value) => setSideDDwell(value as number)}
-              minValue={0.1}
-              maxValue={3.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-          </div>
-        </div>
-
-        {/* Side C */}
-        <div className="space-y-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
-          <h5 className="font-semibold">🔸 Věž C</h5>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Slider
-              label="Teplota (°C)"
-              value={sideCTemp}
-              onChange={(value) => setSideCTemp(value as number)}
-              minValue={100}
-              maxValue={220}
-              step={1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Tlak (bar)"
-              value={sideCPressure}
-              onChange={(value) => setSideCPressure(value as number)}
-              minValue={1.0}
-              maxValue={8.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Doba (s)"
-              value={sideCDwell}
-              onChange={(value) => setSideCDwell(value as number)}
-              minValue={0.1}
-              maxValue={3.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-          </div>
-        </div>
-
-        {/* Side B */}
-        <div className="space-y-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
-          <h5 className="font-semibold">🔹 Věž B</h5>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Slider
-              label="Teplota (°C)"
-              value={sideBTemp}
-              onChange={(value) => setSideBTemp(value as number)}
-              minValue={100}
-              maxValue={220}
-              step={1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Tlak (bar)"
-              value={sideBPressure}
-              onChange={(value) => setSideBPressure(value as number)}
-              minValue={1.0}
-              maxValue={8.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Doba (s)"
-              value={sideBDwell}
-              onChange={(value) => setSideBDwell(value as number)}
-              minValue={0.1}
-              maxValue={3.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-          </div>
-        </div>
-
-        {/* Side A */}
-        <div className="space-y-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
-          <h5 className="font-semibold">🔺 Věž A</h5>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Slider
-              label="Teplota (°C)"
-              value={sideATemp}
-              onChange={(value) => setSideATemp(value as number)}
-              minValue={100}
-              maxValue={220}
-              step={1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Tlak (bar)"
-              value={sideAPressure}
-              onChange={(value) => setSideAPressure(value as number)}
-              minValue={1.0}
-              maxValue={8.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-            <Slider
-              label="Doba (s)"
-              value={sideADwell}
-              onChange={(value) => setSideADwell(value as number)}
-              minValue={0.1}
-              maxValue={3.0}
-              step={0.1}
-              showTooltip
-              className="max-w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      <Divider />
-
-      {/* Note */}
-      <div className="space-y-2">
-        <h4 className="text-md font-semibold">📝 Poznámka</h4>
-        <Textarea
-          placeholder="Zadejte jakékoliv poznámky k tomuto pokusu..."
-          value={note}
-          onValueChange={setNote}
-          variant="bordered"
-          minRows={3}
-        />
-      </div>
-
-      {/* Outcome */}
-      <div className="space-y-2">
-        <h4 className="text-md font-semibold">🎯 Výsledek pokusu</h4>
+    <div className="space-y-4 pb-24">
+      {/* Outcome Selection - Always visible at top */}
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700">
+        <h4 className="text-md font-semibold mb-3">🎯 Výsledek pokusu</h4>
         <RadioGroup
           value={outcome}
           onValueChange={(value) => setOutcome(value as 'Úspěch' | 'Neúspěch')}
           orientation="horizontal"
+          classNames={{
+            wrapper: 'gap-4',
+          }}
         >
-          <Radio value="Neúspěch">Neúspěch</Radio>
-          <Radio value="Úspěch">Úspěch</Radio>
+          <Radio value="Neúspěch" classNames={{ base: 'flex-1 max-w-none' }}>
+            <span className="text-base">❌ Neúspěch</span>
+          </Radio>
+          <Radio value="Úspěch" classNames={{ base: 'flex-1 max-w-none' }}>
+            <span className="text-base">✅ Úspěch</span>
+          </Radio>
         </RadioGroup>
       </div>
 
+      {/* Collapsible Parameter Sections */}
+      <Accordion
+        variant="splitted"
+        defaultExpandedKeys={['zipper', 'bottom', 'sides']}
+        className="px-0"
+      >
+        {/* Zipper Phase */}
+        <AccordionItem
+          key="zipper"
+          title={
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔗</span>
+              <span className="font-semibold">Svár zip</span>
+            </div>
+          }
+          classNames={{
+            title: 'text-blue-600 dark:text-blue-400',
+          }}
+        >
+          <div className="space-y-4 p-4">
+            <ParameterInput
+              label="Teplota"
+              value={zipperTemp}
+              onChange={setZipperTemp}
+              min={100}
+              max={220}
+              step={1}
+              unit="°C"
+              icon="🌡️"
+            />
+            <ParameterInput
+              label="Tlak"
+              value={zipperPressure}
+              onChange={setZipperPressure}
+              min={1.0}
+              max={8.0}
+              step={0.1}
+              unit="bar"
+              icon="⚡"
+            />
+            <ParameterInput
+              label="Doba"
+              value={zipperDwell}
+              onChange={setZipperDwell}
+              min={0.1}
+              max={3.0}
+              step={0.1}
+              unit="s"
+              icon="⏱️"
+            />
+          </div>
+        </AccordionItem>
+
+        {/* Bottom Phase */}
+        <AccordionItem
+          key="bottom"
+          title={
+            <div className="flex items-center gap-2">
+              <span className="text-lg">⬇️</span>
+              <span className="font-semibold">Svár dno</span>
+            </div>
+          }
+          classNames={{
+            title: 'text-green-600 dark:text-green-400',
+          }}
+        >
+          <div className="space-y-4 p-4">
+            <ParameterInput
+              label="Teplota"
+              value={bottomTemp}
+              onChange={setBottomTemp}
+              min={100}
+              max={220}
+              step={1}
+              unit="°C"
+              icon="🌡️"
+            />
+            <ParameterInput
+              label="Tlak"
+              value={bottomPressure}
+              onChange={setBottomPressure}
+              min={1.0}
+              max={8.0}
+              step={0.1}
+              unit="bar"
+              icon="⚡"
+            />
+            <ParameterInput
+              label="Doba"
+              value={bottomDwell}
+              onChange={setBottomDwell}
+              min={0.1}
+              max={3.0}
+              step={0.1}
+              unit="s"
+              icon="⏱️"
+            />
+          </div>
+        </AccordionItem>
+
+        {/* Side Phases */}
+        <AccordionItem
+          key="sides"
+          title={
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔷</span>
+              <span className="font-semibold">Příčné sváry (Věže)</span>
+            </div>
+          }
+          classNames={{
+            title: 'text-purple-600 dark:text-purple-400',
+          }}
+        >
+          <div className="space-y-6 p-4">
+            {/* Copy Button */}
+            <Button
+              color="secondary"
+              variant="flat"
+              onPress={handleCopyFromE}
+              className="w-full h-12 text-base font-semibold"
+              startContent={<span className="text-lg">🔗</span>}
+            >
+              Kopírovat z Věže E do D, C, B, A
+            </Button>
+
+            {/* Tower E */}
+            <div className="space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+              <h5 className="font-bold text-lg flex items-center gap-2">
+                <span>🔷</span> Věž E
+              </h5>
+              <ParameterInput
+                label="Teplota"
+                value={sideETemp}
+                onChange={setSideETemp}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Tlak"
+                value={sideEPressure}
+                onChange={setSideEPressure}
+                min={1.0}
+                max={8.0}
+                step={0.1}
+                unit="bar"
+                icon="⚡"
+              />
+              <ParameterInput
+                label="Doba"
+                value={sideEDwell}
+                onChange={setSideEDwell}
+                min={0.1}
+                max={3.0}
+                step={0.1}
+                unit="s"
+                icon="⏱️"
+              />
+            </div>
+
+            {/* Tower D */}
+            <div className="space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+              <h5 className="font-bold text-lg flex items-center gap-2">
+                <span>🔶</span> Věž D
+              </h5>
+              <ParameterInput
+                label="Teplota"
+                value={sideDTemp}
+                onChange={setSideDTemp}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Tlak"
+                value={sideDPressure}
+                onChange={setSideDPressure}
+                min={1.0}
+                max={8.0}
+                step={0.1}
+                unit="bar"
+                icon="⚡"
+              />
+              <ParameterInput
+                label="Doba"
+                value={sideDDwell}
+                onChange={setSideDDwell}
+                min={0.1}
+                max={3.0}
+                step={0.1}
+                unit="s"
+                icon="⏱️"
+              />
+            </div>
+
+            {/* Tower C */}
+            <div className="space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+              <h5 className="font-bold text-lg flex items-center gap-2">
+                <span>🔸</span> Věž C
+              </h5>
+              <ParameterInput
+                label="Teplota"
+                value={sideCTemp}
+                onChange={setSideCTemp}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Tlak"
+                value={sideCPressure}
+                onChange={setSideCPressure}
+                min={1.0}
+                max={8.0}
+                step={0.1}
+                unit="bar"
+                icon="⚡"
+              />
+              <ParameterInput
+                label="Doba"
+                value={sideCDwell}
+                onChange={setSideCDwell}
+                min={0.1}
+                max={3.0}
+                step={0.1}
+                unit="s"
+                icon="⏱️"
+              />
+            </div>
+
+            {/* Tower B */}
+            <div className="space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+              <h5 className="font-bold text-lg flex items-center gap-2">
+                <span>🔹</span> Věž B
+              </h5>
+              <ParameterInput
+                label="Teplota"
+                value={sideBTemp}
+                onChange={setSideBTemp}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Tlak"
+                value={sideBPressure}
+                onChange={setSideBPressure}
+                min={1.0}
+                max={8.0}
+                step={0.1}
+                unit="bar"
+                icon="⚡"
+              />
+              <ParameterInput
+                label="Doba"
+                value={sideBDwell}
+                onChange={setSideBDwell}
+                min={0.1}
+                max={3.0}
+                step={0.1}
+                unit="s"
+                icon="⏱️"
+              />
+            </div>
+
+            {/* Tower A */}
+            <div className="space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+              <h5 className="font-bold text-lg flex items-center gap-2">
+                <span>🔺</span> Věž A
+              </h5>
+              <ParameterInput
+                label="Teplota"
+                value={sideATemp}
+                onChange={setSideATemp}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Tlak"
+                value={sideAPressure}
+                onChange={setSideAPressure}
+                min={1.0}
+                max={8.0}
+                step={0.1}
+                unit="bar"
+                icon="⚡"
+              />
+              <ParameterInput
+                label="Doba"
+                value={sideADwell}
+                onChange={setSideADwell}
+                min={0.1}
+                max={3.0}
+                step={0.1}
+                unit="s"
+                icon="⏱️"
+              />
+            </div>
+          </div>
+        </AccordionItem>
+
+        {/* Note */}
+        <AccordionItem
+          key="note"
+          title={
+            <div className="flex items-center gap-2">
+              <span className="text-lg">📝</span>
+              <span className="font-semibold">Poznámka (nepovinné)</span>
+            </div>
+          }
+        >
+          <div className="p-4">
+            <Textarea
+              placeholder="Zadejte jakékoliv poznámky k tomuto pokusu..."
+              value={note}
+              onValueChange={setNote}
+              variant="bordered"
+              minRows={4}
+              classNames={{
+                input: 'text-base',
+              }}
+            />
+          </div>
+        </AccordionItem>
+      </Accordion>
+
       {error && (
-        <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg">
-          <p className="text-red-800 dark:text-red-200 text-sm">❌ {error}</p>
+        <div className="p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 rounded-lg">
+          <p className="text-red-800 dark:text-red-200">❌ {error}</p>
         </div>
       )}
 
-      {/* Submit Button */}
-      <div className="flex justify-end">
+      {/* Fixed Bottom Action Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t-2 border-gray-200 dark:border-gray-700 p-4 shadow-lg z-50">
         <Button
           color="primary"
           size="lg"
           onPress={handleSubmit}
           isLoading={loading}
-          className="font-semibold"
+          className="w-full h-14 text-lg font-bold"
         >
-          Uložit pokus
+          {loading ? 'Ukládání...' : 'Uložit pokus'}
         </Button>
       </div>
     </div>

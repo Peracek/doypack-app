@@ -47,27 +47,30 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 pb-20">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
             🔥 Tepelné svařování Doypack
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Sběr dat - Správa zakázek a pokusů svařování
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1">
+            Sběr dat - Správa zakázek a pokusů
           </p>
         </div>
+      </div>
 
-        {/* Create Order Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Create Order Button - Larger for touch */}
         <div className="mb-6">
           <Button
             color="primary"
             size="lg"
             onPress={() => setIsModalOpen(true)}
-            className="font-semibold"
+            className="w-full md:w-auto h-14 text-lg font-bold"
+            startContent={<span className="text-xl">➕</span>}
           >
-            ➕ Nová zakázka
+            Nová zakázka
           </Button>
         </div>
 
@@ -79,71 +82,88 @@ export default function Home() {
         ) : orders.length === 0 ? (
           <Card className="p-8">
             <CardBody>
-              <div className="text-center">
-                <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-                  👋 Vítejte! Klikněte na tlačítko výše pro vytvoření vaší první zakázky.
+              <div className="text-center py-8">
+                <div className="text-6xl mb-4">📦</div>
+                <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">
+                  Zatím nemáte žádné zakázky
+                </p>
+                <p className="text-gray-500 dark:text-gray-500 mb-6">
+                  Klikněte na tlačítko výše pro vytvoření vaší první zakázky
                 </p>
               </div>
             </CardBody>
           </Card>
         ) : (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-              📋 Seznam zakázek
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 px-2">
+              📋 Seznam zakázek ({orders.length})
             </h2>
             {orders.map((order) => (
-              <Card key={order.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      📦 {order.order_code}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatDateTime(order.created_at)}
-                    </p>
-                  </div>
-                  <Link href={`/orders/${order.id}`}>
-                    <Button color="primary" size="sm">
-                      📝 Otevřít zakázku
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardBody>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Materiál</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {order.material_type}
-                      </p>
+              <Link key={order.id} href={`/orders/${order.id}`} className="block">
+                <Card
+                  isPressable
+                  isHoverable
+                  className="hover:shadow-xl transition-all active:scale-[0.98]"
+                >
+                  <CardHeader className="flex-col items-start gap-2 pb-2">
+                    <div className="flex w-full justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                          📦 {order.order_code}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                          {formatDateTime(order.created_at)}
+                        </p>
+                      </div>
+                      <Button
+                        color="primary"
+                        variant="flat"
+                        size="sm"
+                        className="min-h-10"
+                        as="div"
+                      >
+                        Otevřít →
+                      </Button>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Pokrytí</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {order.print_coverage}%
-                      </p>
+                  </CardHeader>
+                  <CardBody className="pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Materiál</p>
+                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white line-clamp-2">
+                          {order.material_type}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Pokrytí</p>
+                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
+                          {order.print_coverage}%
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Velikost</p>
+                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
+                          {getPackageSizeLabel(order.package_size)}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Sáčkovačka</p>
+                        <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">
+                          {order.sackovacka || 'N/A'}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Velikost</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {getPackageSizeLabel(order.package_size)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Sáčkovačka</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {order.sackovacka || 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-                  {order.note && (
-                    <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        <strong>Poznámka:</strong> {order.note}
-                      </p>
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
+                    {order.note && (
+                      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <strong className="font-semibold">📝 Poznámka:</strong>{' '}
+                          <span className="line-clamp-2">{order.note}</span>
+                        </p>
+                      </div>
+                    )}
+                  </CardBody>
+                </Card>
+              </Link>
             ))}
           </div>
         )}

@@ -32,26 +32,31 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   const [bottomDwell, setBottomDwell] = useState(1.2);
 
   // Side phases
+  const [sideESetup, setSideESetup] = useState<'iron-iron' | 'iron-silicon' | 'silicon-iron'>('iron-iron');
   const [sideETempUpper, setSideETempUpper] = useState(155);
   const [sideETempLower, setSideETempLower] = useState(155);
   const [sideEPressure, setSideEPressure] = useState(4.2);
   const [sideEDwell, setSideEDwell] = useState(1.1);
 
+  const [sideDSetup, setSideDSetup] = useState<'iron-iron' | 'iron-silicon' | 'silicon-iron'>('iron-iron');
   const [sideDTempUpper, setSideDTempUpper] = useState(158);
   const [sideDTempLower, setSideDTempLower] = useState(158);
   const [sideDPressure, setSideDPressure] = useState(4.3);
   const [sideDDwell, setSideDDwell] = useState(1.15);
 
+  const [sideCSetup, setSideCSetup] = useState<'iron-iron' | 'iron-silicon' | 'silicon-iron'>('iron-iron');
   const [sideCTempUpper, setSideCTempUpper] = useState(162);
   const [sideCTempLower, setSideCTempLower] = useState(162);
   const [sideCPressure, setSideCPressure] = useState(4.4);
   const [sideCDwell, setSideCDwell] = useState(1.2);
 
+  const [sideBSetup, setSideBSetup] = useState<'iron-iron' | 'iron-silicon' | 'silicon-iron'>('iron-iron');
   const [sideBTempUpper, setSideBTempUpper] = useState(165);
   const [sideBTempLower, setSideBTempLower] = useState(165);
   const [sideBPressure, setSideBPressure] = useState(4.5);
   const [sideBDwell, setSideBDwell] = useState(1.25);
 
+  const [sideASetup, setSideASetup] = useState<'iron-iron' | 'iron-silicon' | 'silicon-iron'>('iron-iron');
   const [sideATempUpper, setSideATempUpper] = useState(168);
   const [sideATempLower, setSideATempLower] = useState(168);
   const [sideAPressure, setSideAPressure] = useState(4.6);
@@ -98,22 +103,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
         bottom_temperature_c: bottomTemp,
         bottom_pressure_bar: bottomPressure,
         bottom_dwell_time_s: bottomDwell,
+        side_e_setup: sideESetup,
         side_e_temperature_upper_c: sideETempUpper,
         side_e_temperature_lower_c: sideETempLower,
         side_e_pressure_bar: sideEPressure,
         side_e_dwell_time_s: sideEDwell,
+        side_d_setup: sideDSetup,
         side_d_temperature_upper_c: sideDTempUpper,
         side_d_temperature_lower_c: sideDTempLower,
         side_d_pressure_bar: sideDPressure,
         side_d_dwell_time_s: sideDDwell,
+        side_c_setup: sideCSetup,
         side_c_temperature_upper_c: sideCTempUpper,
         side_c_temperature_lower_c: sideCTempLower,
         side_c_pressure_bar: sideCPressure,
         side_c_dwell_time_s: sideCDwell,
+        side_b_setup: sideBSetup,
         side_b_temperature_upper_c: sideBTempUpper,
         side_b_temperature_lower_c: sideBTempLower,
         side_b_pressure_bar: sideBPressure,
         side_b_dwell_time_s: sideBDwell,
+        side_a_setup: sideASetup,
         side_a_temperature_upper_c: sideATempUpper,
         side_a_temperature_lower_c: sideATempLower,
         side_a_pressure_bar: sideAPressure,
@@ -253,6 +263,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <h5 className="font-bold text-lg flex items-center gap-2">
                 <span>🔷</span> Věž E
               </h5>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <RadioGroup
+                  value={sideESetup}
+                  onValueChange={(value) => setSideESetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
+                  orientation="horizontal"
+                  classNames={{
+                    wrapper: "gap-2",
+                  }}
+                >
+                  <Radio value="iron-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Železo</span>
+                  </Radio>
+                  <Radio value="iron-silicon" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Silikon</span>
+                  </Radio>
+                  <Radio value="silicon-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Silikon-Železo</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideETempUpper}
@@ -300,6 +331,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <h5 className="font-bold text-lg flex items-center gap-2">
                 <span>🔶</span> Věž D
               </h5>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <RadioGroup
+                  value={sideDSetup}
+                  onValueChange={(value) => setSideDSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
+                  orientation="horizontal"
+                  classNames={{
+                    wrapper: "gap-2",
+                  }}
+                >
+                  <Radio value="iron-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Železo</span>
+                  </Radio>
+                  <Radio value="iron-silicon" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Silikon</span>
+                  </Radio>
+                  <Radio value="silicon-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Silikon-Železo</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideDTempUpper}
@@ -347,6 +399,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <h5 className="font-bold text-lg flex items-center gap-2">
                 <span>🔸</span> Věž C
               </h5>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <RadioGroup
+                  value={sideCSetup}
+                  onValueChange={(value) => setSideCSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
+                  orientation="horizontal"
+                  classNames={{
+                    wrapper: "gap-2",
+                  }}
+                >
+                  <Radio value="iron-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Železo</span>
+                  </Radio>
+                  <Radio value="iron-silicon" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Silikon</span>
+                  </Radio>
+                  <Radio value="silicon-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Silikon-Železo</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideCTempUpper}
@@ -394,6 +467,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <h5 className="font-bold text-lg flex items-center gap-2">
                 <span>🔹</span> Věž B
               </h5>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <RadioGroup
+                  value={sideBSetup}
+                  onValueChange={(value) => setSideBSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
+                  orientation="horizontal"
+                  classNames={{
+                    wrapper: "gap-2",
+                  }}
+                >
+                  <Radio value="iron-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Železo</span>
+                  </Radio>
+                  <Radio value="iron-silicon" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Silikon</span>
+                  </Radio>
+                  <Radio value="silicon-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Silikon-Železo</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideBTempUpper}
@@ -441,6 +535,27 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <h5 className="font-bold text-lg flex items-center gap-2">
                 <span>🔺</span> Věž A
               </h5>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <RadioGroup
+                  value={sideASetup}
+                  onValueChange={(value) => setSideASetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
+                  orientation="horizontal"
+                  classNames={{
+                    wrapper: "gap-2",
+                  }}
+                >
+                  <Radio value="iron-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Železo</span>
+                  </Radio>
+                  <Radio value="iron-silicon" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Železo-Silikon</span>
+                  </Radio>
+                  <Radio value="silicon-iron" classNames={{ base: "flex-1 max-w-none" }}>
+                    <span className="text-sm">Silikon-Železo</span>
+                  </Radio>
+                </RadioGroup>
+              </div>
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideATempUpper}

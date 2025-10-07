@@ -255,27 +255,56 @@ export default function OrderDetailPage() {
                             {/* Side Phases */}
                             {['E', 'D', 'C', 'B', 'A'].map((tower) => {
                               const key = tower.toLowerCase();
-                              const temp = attempt[`side_${key}_temperature_c` as keyof Attempt];
+                              const tempUpper = attempt[`side_${key}_temperature_upper_c` as keyof Attempt];
+                              const tempLower = attempt[`side_${key}_temperature_lower_c` as keyof Attempt];
+                              const tempLegacy = attempt[`side_${key}_temperature_c` as keyof Attempt];
                               const pressure = attempt[`side_${key}_pressure_bar` as keyof Attempt];
                               const dwell = attempt[`side_${key}_dwell_time_s` as keyof Attempt];
 
                               return (
                                 <div key={tower} className="border-l-4 border-purple-500 pl-3">
                                   <p className="font-semibold mb-2 text-sm">🔷 Věž {tower}</p>
-                                  {temp ? (
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <div>
-                                        <p className="text-xs text-gray-500">Teplota</p>
-                                        <p className="font-medium text-sm">🌡️ {temp}°C</p>
-                                      </div>
-                                      <div>
-                                        <p className="text-xs text-gray-500">Tlak</p>
-                                        <p className="font-medium text-sm">⚡ {pressure} bar</p>
-                                      </div>
-                                      <div>
-                                        <p className="text-xs text-gray-500">Doba</p>
-                                        <p className="font-medium text-sm">⏱️ {dwell}s</p>
-                                      </div>
+                                  {(tempUpper || tempLower || tempLegacy) ? (
+                                    <div className="space-y-2">
+                                      {tempUpper || tempLower ? (
+                                        <>
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                              <p className="text-xs text-gray-500">Teplota (horní)</p>
+                                              <p className="font-medium text-sm">🌡️ {tempUpper}°C</p>
+                                            </div>
+                                            <div>
+                                              <p className="text-xs text-gray-500">Teplota (dolní)</p>
+                                              <p className="font-medium text-sm">🌡️ {tempLower}°C</p>
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                              <p className="text-xs text-gray-500">Tlak</p>
+                                              <p className="font-medium text-sm">⚡ {pressure} bar</p>
+                                            </div>
+                                            <div>
+                                              <p className="text-xs text-gray-500">Doba</p>
+                                              <p className="font-medium text-sm">⏱️ {dwell}s</p>
+                                            </div>
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <div className="grid grid-cols-3 gap-2">
+                                          <div>
+                                            <p className="text-xs text-gray-500">Teplota</p>
+                                            <p className="font-medium text-sm">🌡️ {tempLegacy}°C</p>
+                                          </div>
+                                          <div>
+                                            <p className="text-xs text-gray-500">Tlak</p>
+                                            <p className="font-medium text-sm">⚡ {pressure} bar</p>
+                                          </div>
+                                          <div>
+                                            <p className="text-xs text-gray-500">Doba</p>
+                                            <p className="font-medium text-sm">⏱️ {dwell}s</p>
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                   ) : (
                                     <p className="text-gray-500 italic text-sm">Nezadáno</p>

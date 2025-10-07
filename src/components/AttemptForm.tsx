@@ -23,23 +23,28 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   const [bottomDwell, setBottomDwell] = useState(1.2);
 
   // Side phases
-  const [sideETemp, setSideETemp] = useState(155);
+  const [sideETempUpper, setSideETempUpper] = useState(155);
+  const [sideETempLower, setSideETempLower] = useState(155);
   const [sideEPressure, setSideEPressure] = useState(4.2);
   const [sideEDwell, setSideEDwell] = useState(1.1);
 
-  const [sideDTemp, setSideDTemp] = useState(158);
+  const [sideDTempUpper, setSideDTempUpper] = useState(158);
+  const [sideDTempLower, setSideDTempLower] = useState(158);
   const [sideDPressure, setSideDPressure] = useState(4.3);
   const [sideDDwell, setSideDDwell] = useState(1.15);
 
-  const [sideCTemp, setSideCTemp] = useState(162);
+  const [sideCTempUpper, setSideCTempUpper] = useState(162);
+  const [sideCTempLower, setSideCTempLower] = useState(162);
   const [sideCPressure, setSideCPressure] = useState(4.4);
   const [sideCDwell, setSideCDwell] = useState(1.2);
 
-  const [sideBTemp, setSideBTemp] = useState(165);
+  const [sideBTempUpper, setSideBTempUpper] = useState(165);
+  const [sideBTempLower, setSideBTempLower] = useState(165);
   const [sideBPressure, setSideBPressure] = useState(4.5);
   const [sideBDwell, setSideBDwell] = useState(1.25);
 
-  const [sideATemp, setSideATemp] = useState(168);
+  const [sideATempUpper, setSideATempUpper] = useState(168);
+  const [sideATempLower, setSideATempLower] = useState(168);
   const [sideAPressure, setSideAPressure] = useState(4.6);
   const [sideADwell, setSideADwell] = useState(1.3);
 
@@ -50,19 +55,23 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
 
   const handleCopyFromE = () => {
     // Copy values from Side E to all other side phases
-    setSideDTemp(sideETemp);
+    setSideDTempUpper(sideETempUpper);
+    setSideDTempLower(sideETempLower);
     setSideDPressure(sideEPressure);
     setSideDDwell(sideEDwell);
 
-    setSideCTemp(sideETemp);
+    setSideCTempUpper(sideETempUpper);
+    setSideCTempLower(sideETempLower);
     setSideCPressure(sideEPressure);
     setSideCDwell(sideEDwell);
 
-    setSideBTemp(sideETemp);
+    setSideBTempUpper(sideETempUpper);
+    setSideBTempLower(sideETempLower);
     setSideBPressure(sideEPressure);
     setSideBDwell(sideEDwell);
 
-    setSideATemp(sideETemp);
+    setSideATempUpper(sideETempUpper);
+    setSideATempLower(sideETempLower);
     setSideAPressure(sideEPressure);
     setSideADwell(sideEDwell);
   };
@@ -80,19 +89,24 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
         bottom_temperature_c: bottomTemp,
         bottom_pressure_bar: bottomPressure,
         bottom_dwell_time_s: bottomDwell,
-        side_e_temperature_c: sideETemp,
+        side_e_temperature_upper_c: sideETempUpper,
+        side_e_temperature_lower_c: sideETempLower,
         side_e_pressure_bar: sideEPressure,
         side_e_dwell_time_s: sideEDwell,
-        side_d_temperature_c: sideDTemp,
+        side_d_temperature_upper_c: sideDTempUpper,
+        side_d_temperature_lower_c: sideDTempLower,
         side_d_pressure_bar: sideDPressure,
         side_d_dwell_time_s: sideDDwell,
-        side_c_temperature_c: sideCTemp,
+        side_c_temperature_upper_c: sideCTempUpper,
+        side_c_temperature_lower_c: sideCTempLower,
         side_c_pressure_bar: sideCPressure,
         side_c_dwell_time_s: sideCDwell,
-        side_b_temperature_c: sideBTemp,
+        side_b_temperature_upper_c: sideBTempUpper,
+        side_b_temperature_lower_c: sideBTempLower,
         side_b_pressure_bar: sideBPressure,
         side_b_dwell_time_s: sideBDwell,
-        side_a_temperature_c: sideATemp,
+        side_a_temperature_upper_c: sideATempUpper,
+        side_a_temperature_lower_c: sideATempLower,
         side_a_pressure_bar: sideAPressure,
         side_a_dwell_time_s: sideADwell,
         note: note.trim() || undefined,
@@ -245,9 +259,19 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔷</span> Věž E
               </h5>
               <ParameterInput
-                label="Teplota"
-                value={sideETemp}
-                onChange={setSideETemp}
+                label="Teplota (horní)"
+                value={sideETempUpper}
+                onChange={setSideETempUpper}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Teplota (dolní)"
+                value={sideETempLower}
+                onChange={setSideETempLower}
                 min={100}
                 max={220}
                 step={1}
@@ -282,9 +306,19 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔶</span> Věž D
               </h5>
               <ParameterInput
-                label="Teplota"
-                value={sideDTemp}
-                onChange={setSideDTemp}
+                label="Teplota (horní)"
+                value={sideDTempUpper}
+                onChange={setSideDTempUpper}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Teplota (dolní)"
+                value={sideDTempLower}
+                onChange={setSideDTempLower}
                 min={100}
                 max={220}
                 step={1}
@@ -319,9 +353,19 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔸</span> Věž C
               </h5>
               <ParameterInput
-                label="Teplota"
-                value={sideCTemp}
-                onChange={setSideCTemp}
+                label="Teplota (horní)"
+                value={sideCTempUpper}
+                onChange={setSideCTempUpper}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Teplota (dolní)"
+                value={sideCTempLower}
+                onChange={setSideCTempLower}
                 min={100}
                 max={220}
                 step={1}
@@ -356,9 +400,19 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔹</span> Věž B
               </h5>
               <ParameterInput
-                label="Teplota"
-                value={sideBTemp}
-                onChange={setSideBTemp}
+                label="Teplota (horní)"
+                value={sideBTempUpper}
+                onChange={setSideBTempUpper}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Teplota (dolní)"
+                value={sideBTempLower}
+                onChange={setSideBTempLower}
                 min={100}
                 max={220}
                 step={1}
@@ -393,9 +447,19 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔺</span> Věž A
               </h5>
               <ParameterInput
-                label="Teplota"
-                value={sideATemp}
-                onChange={setSideATemp}
+                label="Teplota (horní)"
+                value={sideATempUpper}
+                onChange={setSideATempUpper}
+                min={100}
+                max={220}
+                step={1}
+                unit="°C"
+                icon="🌡️"
+              />
+              <ParameterInput
+                label="Teplota (dolní)"
+                value={sideATempLower}
+                onChange={setSideATempLower}
                 min={100}
                 max={220}
                 step={1}

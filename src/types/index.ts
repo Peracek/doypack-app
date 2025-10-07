@@ -31,23 +31,33 @@ export interface Attempt {
   bottom_dwell_time_s: number | null;
 
   // Side sealing phases (E, D, C, B, A)
-  side_e_temperature_c: number | null;
+  side_e_temperature_c: number | null; // Legacy - kept for backward compatibility
+  side_e_temperature_upper_c: number | null;
+  side_e_temperature_lower_c: number | null;
   side_e_pressure_bar: number | null;
   side_e_dwell_time_s: number | null;
 
-  side_d_temperature_c: number | null;
+  side_d_temperature_c: number | null; // Legacy - kept for backward compatibility
+  side_d_temperature_upper_c: number | null;
+  side_d_temperature_lower_c: number | null;
   side_d_pressure_bar: number | null;
   side_d_dwell_time_s: number | null;
 
-  side_c_temperature_c: number | null;
+  side_c_temperature_c: number | null; // Legacy - kept for backward compatibility
+  side_c_temperature_upper_c: number | null;
+  side_c_temperature_lower_c: number | null;
   side_c_pressure_bar: number | null;
   side_c_dwell_time_s: number | null;
 
-  side_b_temperature_c: number | null;
+  side_b_temperature_c: number | null; // Legacy - kept for backward compatibility
+  side_b_temperature_upper_c: number | null;
+  side_b_temperature_lower_c: number | null;
   side_b_pressure_bar: number | null;
   side_b_dwell_time_s: number | null;
 
-  side_a_temperature_c: number | null;
+  side_a_temperature_c: number | null; // Legacy - kept for backward compatibility
+  side_a_temperature_upper_c: number | null;
+  side_a_temperature_lower_c: number | null;
   side_a_pressure_bar: number | null;
   side_a_dwell_time_s: number | null;
 
@@ -78,23 +88,28 @@ export interface CreateAttemptInput {
   bottom_dwell_time_s: number;
 
   // Side phases
-  side_e_temperature_c: number;
+  side_e_temperature_upper_c: number;
+  side_e_temperature_lower_c: number;
   side_e_pressure_bar: number;
   side_e_dwell_time_s: number;
 
-  side_d_temperature_c: number;
+  side_d_temperature_upper_c: number;
+  side_d_temperature_lower_c: number;
   side_d_pressure_bar: number;
   side_d_dwell_time_s: number;
 
-  side_c_temperature_c: number;
+  side_c_temperature_upper_c: number;
+  side_c_temperature_lower_c: number;
   side_c_pressure_bar: number;
   side_c_dwell_time_s: number;
 
-  side_b_temperature_c: number;
+  side_b_temperature_upper_c: number;
+  side_b_temperature_lower_c: number;
   side_b_pressure_bar: number;
   side_b_dwell_time_s: number;
 
-  side_a_temperature_c: number;
+  side_a_temperature_upper_c: number;
+  side_a_temperature_lower_c: number;
   side_a_pressure_bar: number;
   side_a_dwell_time_s: number;
 

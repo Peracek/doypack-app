@@ -111,10 +111,6 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
                 isRequired
                 variant="bordered"
                 size="lg"
-                classNames={{
-                  input: 'text-lg',
-                  inputWrapper: 'h-14',
-                }}
               />
             </div>
 

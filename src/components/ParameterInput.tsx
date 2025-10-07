@@ -1,6 +1,6 @@
 'use client';
 
-import { Slider } from '@heroui/react';
+import { Slider, Button } from '@heroui/react';
 
 interface ParameterInputProps {
   label: string;
@@ -23,6 +23,16 @@ export default function ParameterInput({
   unit = '',
   icon = '',
 }: ParameterInputProps) {
+  const handleDecrement = () => {
+    const newValue = Math.max(min, value - step);
+    onChange(newValue);
+  };
+
+  const handleIncrement = () => {
+    const newValue = Math.min(max, value + step);
+    onChange(newValue);
+  };
+
   return (
     <Slider
       label={
@@ -39,6 +49,30 @@ export default function ParameterInput({
       showTooltip
       showSteps={step >= 1}
       getValue={(val) => `${typeof val === 'number' ? val : val[0]}${unit}`}
+      startContent={
+        <Button
+          isIconOnly
+          size="sm"
+          variant="flat"
+          onPress={handleDecrement}
+          isDisabled={value <= min}
+          className="min-w-8 h-8 text-lg font-bold"
+        >
+          −
+        </Button>
+      }
+      endContent={
+        <Button
+          isIconOnly
+          size="sm"
+          variant="flat"
+          onPress={handleIncrement}
+          isDisabled={value >= max}
+          className="min-w-8 h-8 text-lg font-bold"
+        >
+          +
+        </Button>
+      }
       classNames={{
         base: 'max-w-full',
         label: 'text-sm font-medium',

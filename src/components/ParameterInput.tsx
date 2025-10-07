@@ -62,7 +62,7 @@ export default function ParameterInput({
       startContent={
         <Button
           isIconOnly
-          size="sm"
+          size="lg"
           variant="flat"
           onPress={handleDecrement}
           isDisabled={value <= min}
@@ -74,7 +74,7 @@ export default function ParameterInput({
       endContent={
         <Button
           isIconOnly
-          size="sm"
+          size="lg"
           variant="flat"
           onPress={handleIncrement}
           isDisabled={value >= max}

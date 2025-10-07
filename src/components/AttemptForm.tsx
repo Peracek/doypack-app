@@ -264,7 +264,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔷</span> Věž E
               </h5>
               <div>
-                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <label className="text-sm font-medium mb-2 block">Sestavení (horní-dolní)</label>
                 <RadioGroup
                   value={sideESetup}
                   onValueChange={(value) => setSideESetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
@@ -342,7 +342,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔶</span> Věž D
               </h5>
               <div>
-                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <label className="text-sm font-medium mb-2 block">Sestavení (horní-dolní)</label>
                 <RadioGroup
                   value={sideDSetup}
                   onValueChange={(value) => setSideDSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
@@ -420,7 +420,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔸</span> Věž C
               </h5>
               <div>
-                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <label className="text-sm font-medium mb-2 block">Sestavení (horní-dolní)</label>
                 <RadioGroup
                   value={sideCSetup}
                   onValueChange={(value) => setSideCSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
@@ -498,7 +498,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔹</span> Věž B
               </h5>
               <div>
-                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <label className="text-sm font-medium mb-2 block">Sestavení (horní-dolní)</label>
                 <RadioGroup
                   value={sideBSetup}
                   onValueChange={(value) => setSideBSetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}
@@ -576,7 +576,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 <span>🔺</span> Věž A
               </h5>
               <div>
-                <label className="text-sm font-medium mb-2 block">Sestavení</label>
+                <label className="text-sm font-medium mb-2 block">Sestavení (horní-dolní)</label>
                 <RadioGroup
                   value={sideASetup}
                   onValueChange={(value) => setSideASetup(value as 'iron-iron' | 'iron-silicon' | 'silicon-iron')}

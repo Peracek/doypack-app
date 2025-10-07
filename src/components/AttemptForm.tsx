@@ -287,7 +287,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideETempUpper}
-                onChange={setSideETempUpper}
+                onChange={(value) => {
+                  setSideETempUpper(value);
+                  if (sideESetup === 'iron-iron') {
+                    setSideETempLower(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -297,7 +302,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (dolní)"
                 value={sideETempLower}
-                onChange={setSideETempLower}
+                onChange={(value) => {
+                  setSideETempLower(value);
+                  if (sideESetup === 'iron-iron') {
+                    setSideETempUpper(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -355,7 +365,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideDTempUpper}
-                onChange={setSideDTempUpper}
+                onChange={(value) => {
+                  setSideDTempUpper(value);
+                  if (sideDSetup === 'iron-iron') {
+                    setSideDTempLower(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -365,7 +380,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (dolní)"
                 value={sideDTempLower}
-                onChange={setSideDTempLower}
+                onChange={(value) => {
+                  setSideDTempLower(value);
+                  if (sideDSetup === 'iron-iron') {
+                    setSideDTempUpper(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -423,7 +443,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideCTempUpper}
-                onChange={setSideCTempUpper}
+                onChange={(value) => {
+                  setSideCTempUpper(value);
+                  if (sideCSetup === 'iron-iron') {
+                    setSideCTempLower(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -433,7 +458,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (dolní)"
                 value={sideCTempLower}
-                onChange={setSideCTempLower}
+                onChange={(value) => {
+                  setSideCTempLower(value);
+                  if (sideCSetup === 'iron-iron') {
+                    setSideCTempUpper(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -491,7 +521,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideBTempUpper}
-                onChange={setSideBTempUpper}
+                onChange={(value) => {
+                  setSideBTempUpper(value);
+                  if (sideBSetup === 'iron-iron') {
+                    setSideBTempLower(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -501,7 +536,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (dolní)"
                 value={sideBTempLower}
-                onChange={setSideBTempLower}
+                onChange={(value) => {
+                  setSideBTempLower(value);
+                  if (sideBSetup === 'iron-iron') {
+                    setSideBTempUpper(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -559,7 +599,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (horní)"
                 value={sideATempUpper}
-                onChange={setSideATempUpper}
+                onChange={(value) => {
+                  setSideATempUpper(value);
+                  if (sideASetup === 'iron-iron') {
+                    setSideATempLower(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}
@@ -569,7 +614,12 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               <ParameterInput
                 label="Teplota (dolní)"
                 value={sideATempLower}
-                onChange={setSideATempLower}
+                onChange={(value) => {
+                  setSideATempLower(value);
+                  if (sideASetup === 'iron-iron') {
+                    setSideATempUpper(value);
+                  }
+                }}
                 min={100}
                 max={220}
                 step={1}

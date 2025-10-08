@@ -1,35 +1,43 @@
 from http.server import BaseHTTPRequestHandler
 import json
-import pickle
 import numpy as np
 import os
 import requests
 from functools import lru_cache
+import onnxruntime as ort
 
 # Vercel Blob Storage configuration
 BLOB_STORE_ID = os.getenv('BLOB_READ_WRITE_TOKEN', '')
-MODEL_BLOB_URL = f"https://blob.vercel-storage.com/ml-models/parameters-predictor.pkl?token={BLOB_STORE_ID}"
+MODEL_BLOB_URL = f"https://blob.vercel-storage.com/ml-models/parameters-predictor.onnx"
+ENCODERS_BLOB_URL = f"https://blob.vercel-storage.com/ml-models/encoders.json"
 
 @lru_cache(maxsize=1)
 def load_model():
     """
-    Load model from Vercel Blob Storage.
+    Load ONNX model and encoders from Vercel Blob Storage.
     Cached to avoid reloading on warm function invocations.
     """
     print("Loading model from Vercel Blob...")
 
-    # Download model from Blob
-    response = requests.get(MODEL_BLOB_URL)
+    # Download ONNX model
+    model_response = requests.get(MODEL_BLOB_URL)
+    if model_response.status_code != 200:
+        raise Exception(f"Failed to download model: {model_response.status_code}")
 
-    if response.status_code != 200:
-        raise Exception(f"Failed to download model: {response.status_code}")
+    # Download encoders
+    encoders_response = requests.get(ENCODERS_BLOB_URL)
+    if encoders_response.status_code != 200:
+        raise Exception(f"Failed to download encoders: {encoders_response.status_code}")
 
-    # Load pickle model
-    model_data = pickle.loads(response.content)
+    # Load ONNX session
+    session = ort.InferenceSession(model_response.content)
 
-    print(f"Model loaded successfully (version: {model_data.get('version', 'unknown')})")
+    # Load encoders
+    encoders = json.loads(encoders_response.content)
 
-    return model_data
+    print(f"Model loaded successfully (version: {encoders.get('version', 'unknown')})")
+
+    return session, encoders
 
 def predict_parameters(material_type, print_coverage, package_size, sackovacka):
     """
@@ -39,22 +47,21 @@ def predict_parameters(material_type, print_coverage, package_size, sackovacka):
         dict: Predicted parameters for all phases
     """
     # Load model and encoders
-    model_data = load_model()
-    model = model_data['model']
-    encoders = model_data['encoders']
+    session, encoders = load_model()
 
-    # Encode input features
+    # Encode input features manually using encoder JSON
     try:
-        material_encoded = encoders['material'].transform([material_type])[0]
-        sackovacka_encoded = encoders['sackovacka'].transform([sackovacka])[0]
+        material_encoded = encoders['material']['classes'].index(material_type)
+        sackovacka_encoded = encoders['sackovacka']['classes'].index(sackovacka)
     except ValueError as e:
         raise ValueError(f"Unknown material_type or sackovacka: {e}")
 
     # Prepare feature vector
-    X = np.array([[material_encoded, print_coverage, package_size, sackovacka_encoded]])
+    X = np.array([[material_encoded, print_coverage, package_size, sackovacka_encoded]], dtype=np.float32)
 
-    # Predict
-    predictions = model.predict(X)[0]
+    # Predict using ONNX
+    input_name = session.get_inputs()[0].name
+    predictions = session.run(None, {input_name: X})[0][0]
 
     # Decode setup predictions (they were encoded as integers)
     setup_e_encoded = int(round(predictions[6]))
@@ -63,12 +70,12 @@ def predict_parameters(material_type, print_coverage, package_size, sackovacka):
     setup_b_encoded = int(round(predictions[21]))
     setup_a_encoded = int(round(predictions[26]))
 
-    # Map back to setup types
-    setup_e = encoders['setup_e'].inverse_transform([setup_e_encoded])[0]
-    setup_d = encoders['setup_d'].inverse_transform([setup_d_encoded])[0]
-    setup_c = encoders['setup_c'].inverse_transform([setup_c_encoded])[0]
-    setup_b = encoders['setup_b'].inverse_transform([setup_b_encoded])[0]
-    setup_a = encoders['setup_a'].inverse_transform([setup_a_encoded])[0]
+    # Map back to setup types using encoder classes
+    setup_e = encoders['setup_e']['classes'][setup_e_encoded]
+    setup_d = encoders['setup_d']['classes'][setup_d_encoded]
+    setup_c = encoders['setup_c']['classes'][setup_c_encoded]
+    setup_b = encoders['setup_b']['classes'][setup_b_encoded]
+    setup_a = encoders['setup_a']['classes'][setup_a_encoded]
 
     # Build response
     result = {

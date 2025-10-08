@@ -1,5 +1,8 @@
-scikit-learn==1.5.2
-pandas==2.2.3
-numpy==2.1.3
-psycopg2-binary==2.9.10
+# Lightweight inference dependencies
+onnxruntime==1.19.2
+numpy==1.24.4
 requests==2.32.3
+
+# Only needed for training endpoint (not predict)
+# Keep these minimal
+psycopg2-binary==2.9.10

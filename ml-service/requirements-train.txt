@@ -1,0 +1,8 @@
+# Full training dependencies (for local use only)
+scikit-learn==1.5.2
+pandas==2.2.3
+numpy==1.24.4
+psycopg2-binary==2.9.10
+skl2onnx==1.17.0
+onnx==1.16.0
+onnxruntime==1.19.2

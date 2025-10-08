@@ -3,12 +3,16 @@
 Training script for doypack parameter prediction model.
 Run locally to train and test the model before deploying.
 
+Exports model to ONNX format for lightweight deployment.
+
 Usage:
+    pip install -r requirements-train.txt
     python train_model.py
 """
 
 import os
 import pickle
+import json
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
@@ -17,6 +21,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_absolute_error, r2_score
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from skl2onnx import convert_sklearn
+from skl2onnx.common.data_types import FloatTensorType
 
 # Database connection
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres')
@@ -170,20 +176,58 @@ def train_model(X, y):
     return model
 
 def save_model(model, encoders):
-    """Save model and encoders to file"""
-    model_data = {
-        'model': model,
-        'encoders': encoders,
+    """Save model in ONNX format and encoders separately"""
+    os.makedirs('models', exist_ok=True)
+
+    # Convert model to ONNX
+    initial_type = [('float_input', FloatTensorType([None, 4]))]  # 4 input features
+    onnx_model = convert_sklearn(
+        model,
+        initial_types=initial_type,
+        target_opset=12
+    )
+
+    # Save ONNX model
+    with open('models/parameters-predictor.onnx', 'wb') as f:
+        f.write(onnx_model.SerializeToString())
+
+    # Save encoders separately (small JSON file)
+    encoder_data = {
+        'material': {
+            'classes': encoders['material'].classes_.tolist()
+        },
+        'sackovacka': {
+            'classes': encoders['sackovacka'].classes_.tolist()
+        },
+        'setup_e': {
+            'classes': encoders['setup_e'].classes_.tolist()
+        },
+        'setup_d': {
+            'classes': encoders['setup_d'].classes_.tolist()
+        },
+        'setup_c': {
+            'classes': encoders['setup_c'].classes_.tolist()
+        },
+        'setup_b': {
+            'classes': encoders['setup_b'].classes_.tolist()
+        },
+        'setup_a': {
+            'classes': encoders['setup_a'].classes_.tolist()
+        },
         'version': '1.0.0'
     }
 
-    os.makedirs('models', exist_ok=True)
-    with open('models/parameters-predictor.pkl', 'wb') as f:
-        pickle.dump(model_data, f)
+    with open('models/encoders.json', 'w') as f:
+        json.dump(encoder_data, f, indent=2)
 
-    print("\nModel saved to models/parameters-predictor.pkl")
-    file_size = os.path.getsize('models/parameters-predictor.pkl') / 1024 / 1024
-    print(f"Model size: {file_size:.2f} MB")
+    print("\nModel saved to models/parameters-predictor.onnx")
+    print("Encoders saved to models/encoders.json")
+
+    onnx_size = os.path.getsize('models/parameters-predictor.onnx') / 1024 / 1024
+    encoder_size = os.path.getsize('models/encoders.json') / 1024
+
+    print(f"ONNX model size: {onnx_size:.2f} MB")
+    print(f"Encoders size: {encoder_size:.2f} KB")
 
 def main():
     """Main training pipeline"""

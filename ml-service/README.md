@@ -20,24 +20,34 @@ The ML model predicts all 32 sealing parameters (temperatures, pressures, dwell 
          │ HTTP
          ▼
 ┌─────────────────┐
-│  /api/predict   │  ← Vercel Python Serverless Function
-│   (Inference)   │  ← Downloads model from Vercel Blob
+│  /api/predict   │  ← Vercel Python Serverless (ONNX Runtime)
+│   (Inference)   │  ← Downloads ONNX model + encoders from Blob
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
 │  Vercel Blob    │
-│ Storage (Model) │
+│ parameters-     │
+│ predictor.onnx  │
+│ encoders.json   │
 └─────────────────┘
 ```
 
+## Why ONNX?
+
+Vercel serverless functions have a 250 MB size limit. Using ONNX:
+- ✅ ONNX Runtime: ~50 MB (vs scikit-learn: ~200 MB)
+- ✅ Faster inference
+- ✅ Fits within Vercel limits
+- ✅ Portable across platforms
+
 ## Local Development
 
-### 1. Install Dependencies
+### 1. Install Training Dependencies
 
 ```bash
 cd ml-service
-pip install -r ../api/requirements.txt
+pip install -r requirements-train.txt
 ```
 
 ### 2. Set Database URL
@@ -55,19 +65,21 @@ python train_model.py
 This will:
 - Fetch all successful attempts from database
 - Train Random Forest model
-- Save model to `models/parameters-predictor.pkl`
+- Convert to ONNX format
+- Save to `models/parameters-predictor.onnx` and `models/encoders.json`
 - Print training metrics
 
-### 4. Upload Model to Vercel Blob
+### 4. Upload Models to Vercel Blob
 
-After training locally, upload the model to Vercel Blob Storage:
+After training locally, upload both files to Vercel Blob Storage:
 
 ```bash
 # Using Vercel CLI
-vercel blob upload models/parameters-predictor.pkl --token YOUR_BLOB_TOKEN
+vercel blob upload models/parameters-predictor.onnx
+vercel blob upload models/encoders.json
 ```
 
-Or manually upload via Vercel Dashboard.
+Or manually upload via Vercel Dashboard at: https://vercel.com/storage/blob
 
 ## Deployment
 
@@ -110,41 +122,28 @@ Predict parameters for a new order.
 ```
 
 #### POST /api/train
-Retrain model with latest data (requires API key).
+**Not available in Vercel deployment** (returns 501 error with instructions).
 
-**Headers:**
-```
-X-API-Key: your_training_api_key
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Model trained and uploaded successfully",
-  "total_samples": 45,
-  "metrics": {
-    "mae": 2.34,
-    "r2_score": 0.89,
-    "train_samples": 36,
-    "test_samples": 9
-  },
-  "model_size_mb": 1.23
-}
-```
+Training must be done locally due to package size constraints.
+See "Local Development" section above.
 
 ## Model Details
 
-**Algorithm:** Random Forest Regressor
+**Algorithm:** Random Forest Regressor (converted to ONNX)
 - Multi-output regression (32 outputs)
 - 100 trees
 - Max depth: 10
 - Handles categorical variables via label encoding
+- Exported to ONNX format for efficient inference
+
+**Files:**
+- `parameters-predictor.onnx` - ONNX model file (~2-10 MB)
+- `encoders.json` - Label encoder mappings (~1-5 KB)
 
 **Performance:**
-- Cold start (first request): ~1-3 seconds
-- Warm requests: ~50-200ms
-- Model size: ~5-50MB (depends on training data)
+- Cold start (first request): ~500ms-2s
+- Warm requests: ~50-150ms
+- Total deployment size: ~60 MB (ONNX Runtime + model)
 
 **Minimum Training Data:** 10 successful attempts (recommended: 50+)
 
@@ -171,7 +170,12 @@ Check model performance periodically:
 ### Cold starts too slow
 - Increase Vercel function memory (reduces cold start time)
 - Consider pre-warming functions with cron job
-- Optimize model size (use ONNX instead of pickle)
+- Model is already optimized with ONNX
+
+### Deployment size exceeded
+- Ensure you're using ONNX format (not pickle)
+- Check api/requirements.txt only includes: onnxruntime, numpy, requests
+- Don't include scikit-learn or pandas in deployment requirements
 
 ## Future Improvements
 

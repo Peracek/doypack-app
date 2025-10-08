@@ -1,0 +1,59 @@
+name: Retrain ML Model
+
+on:
+  workflow_dispatch:  # Manual trigger via GitHub UI
+  schedule:
+    - cron: '0 2 * * 0'  # Optional: Every Sunday at 2 AM UTC
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install training dependencies
+        run: |
+          pip install -r ml-service/requirements-train.txt
+
+      - name: Train model
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cd ml-service
+          python train_model.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Upload model to Vercel Blob
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+        run: |
+          # Upload ONNX model
+          npx vercel blob upload ml-service/models/parameters-predictor.onnx \
+            --token=$BLOB_READ_WRITE_TOKEN \
+            --store-name=ml-models
+
+          # Upload encoders
+          npx vercel blob upload ml-service/models/encoders.json \
+            --token=$BLOB_READ_WRITE_TOKEN \
+            --store-name=ml-models
+
+      - name: Upload training artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: |
+            ml-service/models/parameters-predictor.onnx
+            ml-service/models/encoders.json
+          retention-days: 30

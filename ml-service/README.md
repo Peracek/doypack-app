@@ -75,11 +75,44 @@ After training locally, upload both files to Vercel Blob Storage:
 
 ```bash
 # Using Vercel CLI
-vercel blob upload models/parameters-predictor.onnx
-vercel blob upload models/encoders.json
+vercel blob upload models/parameters-predictor.onnx --store-name=ml-models
+vercel blob upload models/encoders.json --store-name=ml-models
 ```
 
 Or manually upload via Vercel Dashboard at: https://vercel.com/storage/blob
+
+## Automated Retraining (GitHub Actions)
+
+The repository includes a GitHub Actions workflow for automatic model retraining.
+
+### Setup GitHub Secrets
+
+Go to your GitHub repository settings → Secrets and variables → Actions, and add:
+
+1. **DATABASE_URL** - Your Supabase PostgreSQL connection string
+2. **BLOB_READ_WRITE_TOKEN** - Your Vercel Blob Storage token (from Vercel dashboard)
+
+### Trigger Retraining
+
+**Option 1: Manual Trigger**
+1. Go to GitHub repository → Actions tab
+2. Select "Retrain ML Model" workflow
+3. Click "Run workflow" button
+4. Wait 2-5 minutes for completion
+
+**Option 2: Automatic Schedule**
+- Runs automatically every Sunday at 2 AM UTC (can be modified in `.github/workflows/retrain-model.yml`)
+
+### What the Workflow Does
+
+1. Installs Python dependencies
+2. Fetches successful attempts from database
+3. Trains Random Forest model
+4. Converts to ONNX format
+5. Uploads `parameters-predictor.onnx` and `encoders.json` to Vercel Blob
+6. Saves artifacts in GitHub for 30 days
+
+The `/api/predict` endpoint will automatically use the updated model on next invocation (cold start downloads latest from Blob).
 
 ## Deployment
 

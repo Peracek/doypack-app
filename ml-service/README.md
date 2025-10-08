@@ -33,13 +33,38 @@ The ML model predicts all 32 sealing parameters (temperatures, pressures, dwell 
 └─────────────────┘
 ```
 
-## Why ONNX?
+## Why ONNX? (The 250 MB Problem)
 
-Vercel serverless functions have a 250 MB size limit. Using ONNX:
-- ✅ ONNX Runtime: ~50 MB (vs scikit-learn: ~200 MB)
-- ✅ Faster inference
-- ✅ Fits within Vercel limits
-- ✅ Portable across platforms
+**The Problem:**
+Vercel serverless functions have a strict **250 MB unzipped size limit** for the entire deployment package. When we initially tried deploying with scikit-learn for inference, the deployment failed:
+
+```
+Error: A Serverless Function has exceeded the unzipped maximum size of 250 MB
+```
+
+**Size breakdown (original approach):**
+- scikit-learn: ~200 MB
+- pandas: ~15 MB
+- numpy: ~5 MB
+- Total: ~220 MB (too close to limit, fails with dependencies)
+
+**The Solution (ONNX):**
+We split the system into two parts:
+1. **Training** (local only): Uses full scikit-learn stack
+2. **Inference** (Vercel): Uses lightweight ONNX Runtime
+
+**Size breakdown (ONNX approach):**
+- onnxruntime: ~50 MB
+- numpy: ~5 MB
+- requests: ~1 MB
+- ONNX model file: ~2-10 MB
+- Total: ~60 MB ✅ (fits comfortably)
+
+**Additional benefits:**
+- ✅ 4x smaller deployment size
+- ✅ Faster inference (optimized runtime)
+- ✅ Platform independent (works anywhere)
+- ✅ Model versioning made easy
 
 ## Local Development
 
@@ -85,12 +110,42 @@ Or manually upload via Vercel Dashboard at: https://vercel.com/storage/blob
 
 The repository includes a GitHub Actions workflow for automatic model retraining.
 
-### Setup GitHub Secrets
+### Setup Instructions
 
-Go to your GitHub repository settings → Secrets and variables → Actions, and add:
+#### 1. Create Vercel Blob Storage
 
-1. **DATABASE_URL** - Your Supabase PostgreSQL connection string
-2. **BLOB_READ_WRITE_TOKEN** - Your Vercel Blob Storage token (from Vercel dashboard)
+1. Go to https://vercel.com/dashboard
+2. Select your project (doypack-next)
+3. Click **Storage** tab
+4. Click **Create Database** or **Connect Store**
+5. Select **Blob** storage type
+6. Name it: `ml-models`
+7. Click **Create**
+
+#### 2. Get Vercel Blob Token
+
+1. After creating the store, click on `ml-models` in Storage tab
+2. Go to **Settings** or **.env.local** tab
+3. Copy the `BLOB_READ_WRITE_TOKEN` value (starts with `vercel_blob_`)
+
+#### 3. Configure GitHub Secrets
+
+Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions**, and add:
+
+1. **DATABASE_URL**
+   - Get from: Supabase dashboard or your `.env.local`
+   - Format: `postgresql://postgres:[password]@[host].supabase.co:5432/postgres`
+
+2. **BLOB_READ_WRITE_TOKEN**
+   - Get from: Vercel Blob Storage settings (step 2 above)
+   - Format: `vercel_blob_...`
+
+#### 4. Configure Vercel Environment Variables
+
+Add the same `BLOB_READ_WRITE_TOKEN` to your Vercel project:
+1. Go to Vercel project → **Settings** → **Environment Variables**
+2. Add `BLOB_READ_WRITE_TOKEN` with the token value
+3. Make sure it's available for all environments (Production, Preview, Development)
 
 ### Trigger Retraining
 
@@ -154,11 +209,20 @@ Predict parameters for a new order.
 }
 ```
 
-#### POST /api/train
-**Not available in Vercel deployment** (returns 501 error with instructions).
+## Retraining Options
 
-Training must be done locally due to package size constraints.
-See "Local Development" section above.
+**❌ `/api/train` endpoint does not exist**
+
+Due to Vercel's 250 MB function size limit, we cannot deploy training on Vercel serverless functions. Instead, use:
+
+1. **GitHub Actions** (Recommended) - See "Automated Retraining" section
+   - Click a button in GitHub to retrain
+   - Automatically uploads to Vercel Blob
+   - Free (2,000 minutes/month)
+
+2. **Local Training** - See "Local Development" section
+   - Run `python ml-service/train_model.py`
+   - Manually upload to Vercel Blob
 
 ## Model Details
 

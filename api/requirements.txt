@@ -1,8 +1,4 @@
-# Lightweight inference dependencies
+# Lightweight inference dependencies (Python 3.12 compatible)
 onnxruntime==1.19.2
-numpy==1.24.4
+numpy==1.26.4
 requests==2.32.3
-
-# Only needed for training endpoint (not predict)
-# Keep these minimal
-psycopg2-binary==2.9.10

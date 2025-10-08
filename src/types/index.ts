@@ -153,3 +153,57 @@ export function getPackageSizeLabel(size: number | null): string {
   const option = PACKAGE_SIZE_OPTIONS.find(o => o.value === size);
   return option?.label || String(size);
 }
+
+// ML Prediction types
+export interface PredictionInput {
+  material_type: string;
+  print_coverage: number;
+  package_size: number;
+  sackovacka: string;
+}
+
+export interface PredictedParameters {
+  zipper_temperature_c: number;
+  zipper_pressure_bar: number;
+  zipper_dwell_time_s: number;
+
+  bottom_temperature_c: number;
+  bottom_pressure_bar: number;
+  bottom_dwell_time_s: number;
+
+  side_e_setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron';
+  side_e_temperature_upper_c: number;
+  side_e_temperature_lower_c: number;
+  side_e_pressure_bar: number;
+  side_e_dwell_time_s: number;
+
+  side_d_setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron';
+  side_d_temperature_upper_c: number;
+  side_d_temperature_lower_c: number;
+  side_d_pressure_bar: number;
+  side_d_dwell_time_s: number;
+
+  side_c_setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron';
+  side_c_temperature_upper_c: number;
+  side_c_temperature_lower_c: number;
+  side_c_pressure_bar: number;
+  side_c_dwell_time_s: number;
+
+  side_b_setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron';
+  side_b_temperature_upper_c: number;
+  side_b_temperature_lower_c: number;
+  side_b_pressure_bar: number;
+  side_b_dwell_time_s: number;
+
+  side_a_setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron';
+  side_a_temperature_upper_c: number;
+  side_a_temperature_lower_c: number;
+  side_a_pressure_bar: number;
+  side_a_dwell_time_s: number;
+}
+
+export interface PredictionResult {
+  success: boolean;
+  predictions?: PredictedParameters;
+  error?: string;
+}

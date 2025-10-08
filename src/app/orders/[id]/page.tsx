@@ -373,7 +373,7 @@ export default function OrderDetailPage() {
             </h2>
           </CardHeader>
           <CardBody className="pt-2">
-            <AttemptForm orderId={Number(orderId)} onSuccess={handleAttemptCreated} />
+            <AttemptForm orderId={Number(orderId)} order={order} onSuccess={handleAttemptCreated} />
           </CardBody>
         </Card>
       </div>

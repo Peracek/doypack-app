@@ -12,15 +12,22 @@ import {
 } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import type { CreateAttemptInput } from "@/types";
+import type { CreateAttemptInput, Order } from "@/types";
 import ParameterInput from "./ParameterInput";
 import { createAttempt } from "@/actions/orders";
+import { predictParameters } from "@/actions/predictions";
 
 interface AttemptFormProps {
   orderId: number;
+  order: Order | null;
   onSuccess: () => void;
 }
 
-export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
+export default function AttemptForm({ orderId, order, onSuccess }: AttemptFormProps) {
+// Prediction state
+const [isPredicting, setIsPredicting] = useState(false);
+const [predictionError, setPredictionError] = useState("");
+
   // Helper function to get temperature labels based on setup
   const getTempLabels = (setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron') => {
     const materials = {
@@ -104,6 +111,74 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
     setSideADwell(sideEDwell);
   };
 
+  const handlePredict = async () => {
+    if (!order) {
+      setPredictionError("Order data not available");
+      return;
+    }
+
+    setIsPredicting(true);
+    setPredictionError("");
+
+    try {
+      const result = await predictParameters({
+        material_type: order.material_type,
+        print_coverage: order.print_coverage,
+        package_size: order.package_size,
+        sackovacka: order.sackovacka || 'S1',
+      });
+
+      if (result.success && result.predictions) {
+        const p = result.predictions;
+
+        // Set all predicted values
+        setZipperTemp(p.zipper_temperature_c);
+        setZipperPressure(p.zipper_pressure_bar);
+        setZipperDwell(p.zipper_dwell_time_s);
+
+        setBottomTemp(p.bottom_temperature_c);
+        setBottomPressure(p.bottom_pressure_bar);
+        setBottomDwell(p.bottom_dwell_time_s);
+
+        setSideESetup(p.side_e_setup);
+        setSideETempUpper(p.side_e_temperature_upper_c);
+        setSideETempLower(p.side_e_temperature_lower_c);
+        setSideEPressure(p.side_e_pressure_bar);
+        setSideEDwell(p.side_e_dwell_time_s);
+
+        setSideDSetup(p.side_d_setup);
+        setSideDTempUpper(p.side_d_temperature_upper_c);
+        setSideDTempLower(p.side_d_temperature_lower_c);
+        setSideDPressure(p.side_d_pressure_bar);
+        setSideDDwell(p.side_d_dwell_time_s);
+
+        setSideCSetup(p.side_c_setup);
+        setSideCTempUpper(p.side_c_temperature_upper_c);
+        setSideCTempLower(p.side_c_temperature_lower_c);
+        setSideCPressure(p.side_c_pressure_bar);
+        setSideCDwell(p.side_c_dwell_time_s);
+
+        setSideBSetup(p.side_b_setup);
+        setSideBTempUpper(p.side_b_temperature_upper_c);
+        setSideBTempLower(p.side_b_temperature_lower_c);
+        setSideBPressure(p.side_b_pressure_bar);
+        setSideBDwell(p.side_b_dwell_time_s);
+
+        setSideASetup(p.side_a_setup);
+        setSideATempUpper(p.side_a_temperature_upper_c);
+        setSideATempLower(p.side_a_temperature_lower_c);
+        setSideAPressure(p.side_a_pressure_bar);
+        setSideADwell(p.side_a_dwell_time_s);
+      } else {
+        setPredictionError(result.error || "Failed to get predictions");
+      }
+    } catch (error: any) {
+      setPredictionError(error.message || "Prediction failed");
+    } finally {
+      setIsPredicting(false);
+    }
+  };
+
   const handleSubmit = async () => {
     startTransition(async () => {
       const attemptData: CreateAttemptInput = {
@@ -174,6 +249,42 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
 
   return (
     <div className="space-y-4 pb-24">
+      {/* AI Prediction Button */}
+      <Card className="border-2 border-purple-500 dark:border-purple-400 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
+        <CardBody className="p-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-lg flex items-center gap-2">
+                  <span>🤖</span> AI Predikce Parametrů
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Automaticky vyplní parametry na základě předchozích úspěšných pokusů
+                </p>
+              </div>
+            </div>
+
+            <Button
+              color="secondary"
+              size="lg"
+              onPress={handlePredict}
+              isLoading={isPredicting}
+              isDisabled={!order || isPredicting}
+              className="w-full h-14 text-lg font-bold"
+              startContent={!isPredicting ? <span className="text-xl">✨</span> : null}
+            >
+              {isPredicting ? "Generuji predikce..." : "Automaticky vyplnit parametry"}
+            </Button>
+
+            {predictionError && (
+              <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg">
+                <p className="text-sm text-red-800 dark:text-red-200">❌ {predictionError}</p>
+              </div>
+            )}
+          </div>
+        </CardBody>
+      </Card>
+
       {/* Parameter Sections */}
       <div className="space-y-4">
         {/* Zipper Phase */}

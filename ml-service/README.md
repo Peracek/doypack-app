@@ -70,10 +70,16 @@ We split the system into two parts:
 
 ### 1. Install Training Dependencies
 
+Due to Python 3.13+ PEP 668 protection, you need to use a virtual environment:
+
 ```bash
 cd ml-service
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements-train.txt
 ```
+
+**Note:** If you get an "externally-managed-environment" error, this is because modern Python versions prevent installing packages directly into the system Python to avoid conflicts. The virtual environment approach above solves this.
 
 ### 2. Set Database URL
 
@@ -83,7 +89,12 @@ export DATABASE_URL="your_supabase_connection_string"
 
 ### 3. Train Model Locally
 
+Make sure your virtual environment is activated, then run:
+
 ```bash
+# If not already activated:
+source venv/bin/activate
+
 python train_model.py
 ```
 
@@ -253,6 +264,17 @@ Check model performance periodically:
 3. Track R² score and MAE after retraining
 
 ## Troubleshooting
+
+### pip install errors
+
+**"externally-managed-environment" error:**
+- Use virtual environment as shown in step 1 above
+- This is due to PEP 668 protection in Python 3.13+
+
+**onnxruntime version conflicts:**
+- If you get "Could not find a version that satisfies the requirement onnxruntime==1.19.2"
+- Update requirements-train.txt to use a compatible version (e.g., onnxruntime>=1.20.0)
+- Python 3.13 requires newer onnxruntime versions
 
 ### Model not loading
 - Check `BLOB_READ_WRITE_TOKEN` environment variable

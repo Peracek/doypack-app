@@ -22,15 +22,23 @@ def load_model():
     print(f"ENCODERS_BLOB_URL: {ENCODERS_BLOB_URL}")
     print(f"Loading model from Vercel Blob... Model URL: {MODEL_BLOB_URL}")
 
+    # Prepare headers with blob token if available
+    headers = {}
+    if BLOB_STORE_ID:
+        headers['Authorization'] = f'Bearer {BLOB_STORE_ID}'
+        print(f"Using blob token for authentication: {BLOB_STORE_ID[:20]}...")
+    else:
+        print("No blob token found in environment variables")
+
     # Download ONNX model
-    model_response = requests.get(MODEL_BLOB_URL)
+    model_response = requests.get(MODEL_BLOB_URL, headers=headers)
     print(f"Model download response: {model_response.status_code}")
     if model_response.status_code != 200:
         raise Exception(f"Failed to download model: {model_response.status_code} from {MODEL_BLOB_URL}")
 
     # Download encoders
     print(f"Downloading encoders from: {ENCODERS_BLOB_URL}")
-    encoders_response = requests.get(ENCODERS_BLOB_URL)
+    encoders_response = requests.get(ENCODERS_BLOB_URL, headers=headers)
     print(f"Encoders download response: {encoders_response.status_code}")
     if encoders_response.status_code != 200:
         raise Exception(f"Failed to download encoders: {encoders_response.status_code} from {ENCODERS_BLOB_URL}")

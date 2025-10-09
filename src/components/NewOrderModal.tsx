@@ -105,7 +105,7 @@ export default function NewOrderModal({ isOpen, onClose, onSuccess }: NewOrderMo
               <h3 className="text-lg font-semibold mb-3">📋 Identifikace zakázky</h3>
               <Input
                 label="Kód zakázky"
-                placeholder="např. Z2024-001"
+                placeholder="např. 2500001"
                 value={orderCode}
                 onValueChange={setOrderCode}
                 isRequired

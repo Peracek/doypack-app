@@ -8,8 +8,8 @@ import onnxruntime as ort
 
 # Vercel Blob Storage configuration
 BLOB_STORE_ID = os.getenv('BLOB_READ_WRITE_TOKEN', '')
-MODEL_BLOB_URL = f"https://blob.vercel-storage.com/ml-models/parameters-predictor.onnx"
-ENCODERS_BLOB_URL = f"https://blob.vercel-storage.com/ml-models/encoders.json"
+MODEL_BLOB_URL = "https://ueq8wqiohiv8ffeu.public.blob.vercel-storage.com/parameters-predictor.onnx"
+ENCODERS_BLOB_URL = "https://ueq8wqiohiv8ffeu.public.blob.vercel-storage.com/encoders.json"
 
 @lru_cache(maxsize=1)
 def load_model():

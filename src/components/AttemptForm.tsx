@@ -9,8 +9,8 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Divider,
 } from "@heroui/react";
+import { addToast } from "@heroui/toast";
 import type { CreateAttemptInput } from "@/types";
 import ParameterInput from "./ParameterInput";
 import { createAttempt } from "@/actions/orders";
@@ -79,7 +79,6 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
 
   const [outcome, setOutcome] = useState<"Úspěch" | "Neúspěch">("Neúspěch");
   const [note, setNote] = useState("");
-  const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const handleCopyFromE = () => {
@@ -106,8 +105,6 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
   };
 
   const handleSubmit = async () => {
-    setError("");
-
     startTransition(async () => {
       const attemptData: CreateAttemptInput = {
         order_id: orderId,
@@ -149,12 +146,28 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
       const result = await createAttempt(orderId, attemptData);
 
       if (result.success) {
+        addToast({
+          title: "Úspěch",
+          description: "Pokus byl úspěšně uložen",
+          severity: "success",
+          timeout: 4000,
+          color: 'success',
+          variant:'solid'
+        });
+
         // Reset form to defaults
         setOutcome("Neúspěch");
         setNote("");
         onSuccess();
       } else {
-        setError(result.error || "Nepodařilo se uložit pokus");
+        addToast({
+          title: "Chyba",
+          description: result.error || "Nepodařilo se uložit pokus",
+          severity: "danger",
+          timeout: 5000,
+          color: 'danger',
+          variant:'solid'
+        });
       }
     });
   };
@@ -708,12 +721,6 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
           </RadioGroup>
         </div>
       </div>
-
-      {error && (
-        <div className="p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 rounded-lg">
-          <p className="text-red-800 dark:text-red-200">❌ {error}</p>
-        </div>
-      )}
 
       {/* Fixed Bottom Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t-2 border-gray-200 dark:border-gray-700 p-4 shadow-lg z-50">

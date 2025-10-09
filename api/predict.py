@@ -62,8 +62,13 @@ def predict_parameters(material_type, print_coverage, package_size, sackovacka):
     Returns:
         dict: Predicted parameters for all phases
     """
+    print("=== PREDICT_PARAMETERS FUNCTION STARTED ===")
+    print(f"Input params: {material_type}, {print_coverage}, {package_size}, {sackovacka}")
+    
     # Load model and encoders
+    print("About to call load_model()...")
     session, encoders = load_model()
+    print("load_model() completed successfully")
 
     # Encode input features manually using encoder JSON
     try:
@@ -140,11 +145,14 @@ class handler(BaseHTTPRequestHandler):
     """Vercel serverless function handler - CACHE BUSTER v2.0"""
 
     def do_POST(self):
+        print("=== API HANDLER STARTED ===")
         try:
+            print("Reading request body...")
             # Read request body
             content_length = int(self.headers['Content-Length'])
             body = self.rfile.read(content_length)
             data = json.loads(body.decode('utf-8'))
+            print(f"Request data received: {data}")
 
             # Extract parameters
             material_type = data.get('material_type')

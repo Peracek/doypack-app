@@ -11,12 +11,12 @@ BLOB_STORE_ID = os.getenv('BLOB_READ_WRITE_TOKEN', '')
 MODEL_BLOB_URL = "https://ueq8wqiohiv8ffeu.public.blob.vercel-storage.com/parameters-predictor.onnx"
 ENCODERS_BLOB_URL = "https://ueq8wqiohiv8ffeu.public.blob.vercel-storage.com/encoders.json"
 
-@lru_cache(maxsize=1)
 def load_model():
     """
     Load ONNX model and encoders from Vercel Blob Storage.
     Cached to avoid reloading on warm function invocations.
     """
+    print("=== ENHANCED DEBUG VERSION 2.0 ===")
     print("Starting load_model function")
     print(f"MODEL_BLOB_URL: {MODEL_BLOB_URL}")
     print(f"ENCODERS_BLOB_URL: {ENCODERS_BLOB_URL}")

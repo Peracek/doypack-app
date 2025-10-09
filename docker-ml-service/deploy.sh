@@ -39,11 +39,8 @@ if [ "$PROJECT_ID" = "your-project-id" ]; then
     exit 1
 fi
 
-echo "📦 Building Docker image..."
-docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
-
-echo "⬆️ Pushing to Google Container Registry..."
-docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+echo "📦 Building Docker image for AMD64 architecture..."
+docker buildx build --platform linux/amd64 -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest . --push
 
 echo "🌐 Deploying to Cloud Run..."
 gcloud run deploy $SERVICE_NAME \
@@ -56,7 +53,13 @@ gcloud run deploy $SERVICE_NAME \
   --cpu 2 \
   --timeout 900 \
   --max-instances 10 \
-  --port 8000
+  --port 8000 \
+  --no-traffic
+
+echo "🔄 Updating traffic to new revision..."
+gcloud run services update-traffic $SERVICE_NAME \
+  --region $REGION \
+  --to-latest
 
 echo ""
 echo "✅ Deployment complete!"

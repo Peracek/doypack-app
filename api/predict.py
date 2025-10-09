@@ -17,6 +17,9 @@ def load_model():
     Load ONNX model and encoders from Vercel Blob Storage.
     Cached to avoid reloading on warm function invocations.
     """
+    print("Starting load_model function")
+    print(f"MODEL_BLOB_URL: {MODEL_BLOB_URL}")
+    print(f"ENCODERS_BLOB_URL: {ENCODERS_BLOB_URL}")
     print(f"Loading model from Vercel Blob... Model URL: {MODEL_BLOB_URL}")
 
     # Download ONNX model
@@ -150,7 +153,9 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             # Make prediction
+            print(f"About to call predict_parameters with: {material_type}, {print_coverage}, {package_size}, {sackovacka}")
             predictions = predict_parameters(material_type, print_coverage, package_size, sackovacka)
+            print("Prediction completed successfully")
 
             # Send response
             self.send_response(200)

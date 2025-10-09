@@ -130,7 +130,7 @@ export async function createAttempt(orderId: number, data: CreateAttemptInput): 
         side_a_setup, side_a_temperature_upper_c, side_a_temperature_lower_c, side_a_pressure_bar, side_a_dwell_time_s,
         note
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34)
       RETURNING id, outcome, created_at,
                 zipper_temperature_c, zipper_pressure_bar, zipper_dwell_time_s,
                 bottom_temperature_c, bottom_pressure_bar, bottom_dwell_time_s,

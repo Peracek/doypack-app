@@ -11,7 +11,6 @@ import {
   CardHeader,
 } from "@heroui/react";
 import { addToast } from "@heroui/toast";
-import type { CreateAttemptInput } from "@/types";
 import type { CreateAttemptInput, Order } from "@/types";
 import ParameterInput from "./ParameterInput";
 import { createAttempt } from "@/actions/orders";

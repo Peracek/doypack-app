@@ -1,4 +1,0 @@
-# Lightweight inference dependencies (Python 3.12 compatible)
-onnxruntime==1.19.2
-numpy==1.26.4
-requests==2.32.3

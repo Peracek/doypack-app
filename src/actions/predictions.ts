@@ -2,9 +2,8 @@
 
 import type { PredictionInput, PredictionResult } from '@/types';
 
-const PREDICTION_API_URL = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/api/predict`
-  : 'http://localhost:3000/api/predict';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+const PREDICTION_API_URL = `${ML_SERVICE_URL}/predict`;
 
 export async function predictParameters(
   input: PredictionInput
@@ -37,17 +36,14 @@ export async function predictParameters(
   }
 }
 
-export async function trainModel(apiKey: string): Promise<{ success: boolean; message?: string; error?: string }> {
-  const TRAINING_API_URL = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}/api/train`
-    : 'http://localhost:3000/api/train';
+export async function trainModel(): Promise<{ success: boolean; message?: string; error?: string; metrics?: any; training_samples?: number }> {
+  const TRAINING_API_URL = `${ML_SERVICE_URL}/train`;
 
   try {
     const response = await fetch(TRAINING_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': apiKey,
       },
     });
 

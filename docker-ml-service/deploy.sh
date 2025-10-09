@@ -5,7 +5,13 @@ set -e
 PROJECT_ID="doypack-474610"  # Your Google Cloud Project ID
 SERVICE_NAME="doypack-ml"
 REGION="us-central1"
-DATABASE_URL="postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres"
+# DATABASE_URL will be read from environment variables
+if [ -z "$DATABASE_URL" ]; then
+    echo "❌ DATABASE_URL environment variable is required"
+    echo "   Please set it in your .env.local file or export it:"
+    echo "   export DATABASE_URL='your_database_url'"
+    exit 1
+fi
 
 echo "🚀 Deploying Doypack ML Service to Google Cloud Run..."
 echo "📋 Configuration:"

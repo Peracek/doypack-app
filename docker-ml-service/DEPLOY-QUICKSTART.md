@@ -25,6 +25,9 @@ cd docker-ml-service
 # Edit deploy.sh - change PROJECT_ID to your actual project ID
 nano deploy.sh  # Change "your-project-id" to your real project ID
 
+# Set DATABASE_URL from your .env.local file
+export DATABASE_URL="your_database_url_from_env_local"
+
 # Deploy!
 ./deploy.sh
 ```
@@ -35,7 +38,7 @@ Copy the service URL from the deploy script output and update your `.env.local`:
 
 ```bash
 ML_SERVICE_URL=https://doypack-ml-xxxxxxxxx-uc.a.run.app
-DATABASE_URL=postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres
+DATABASE_URL=your_database_url_from_env_local
 ```
 
 ## 4. Test

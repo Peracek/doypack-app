@@ -46,7 +46,9 @@ class TrainingResponse(BaseModel):
 
 def get_db_connection():
     """Get database connection"""
-    database_url = os.getenv('DATABASE_URL', 'postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres')
+    database_url = os.getenv('DATABASE_URL')
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable is required")
     return psycopg2.connect(database_url)
 
 def fetch_training_data():

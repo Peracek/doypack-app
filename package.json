@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "deploy:ml": "cd docker-ml-service && ./deploy.sh",
+    "deploy:ml": "cd docker-ml-service && source ../.env.local && ./deploy.sh",
     "ml:local": "cd docker-ml-service && docker-compose up --build",
     "ml:test": "cd docker-ml-service && python test_service.py",
     "ml:logs": "export PATH=/opt/homebrew/share/google-cloud-sdk/bin:$PATH && gcloud logging read 'resource.type=cloud_run_revision AND resource.labels.service_name=doypack-ml' --limit 50"

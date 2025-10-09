@@ -56,7 +56,7 @@ gcloud run deploy doypack-ml \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars DATABASE_URL="postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres" \
+  --set-env-vars DATABASE_URL="$DATABASE_URL" \
   --memory 2Gi \
   --cpu 2 \
   --timeout 900 \
@@ -118,7 +118,10 @@ spec:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
-          value: "postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres"
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: DATABASE_URL
         resources:
           requests:
             memory: "1Gi"
@@ -210,7 +213,7 @@ steps:
     - 'managed'
     - '--allow-unauthenticated'
     - '--set-env-vars'
-    - 'DATABASE_URL=postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres'
+    - 'DATABASE_URL=$DATABASE_URL'
 
 images:
 - gcr.io/$PROJECT_ID/doypack-ml:$COMMIT_SHA
@@ -295,8 +298,8 @@ ML_SERVICE_URL=https://doypack-ml-xxxxxxxxx-uc.a.run.app
 # For GKE deployment  
 ML_SERVICE_URL=http://EXTERNAL_IP
 
-# Database (same)
-DATABASE_URL=postgresql://postgres.isdyfsusgykamjzxnmjt:S66mOjrLWyMN8I@aws-1-eu-central-1.pooler.supabase.com:6543/postgres
+# Database (keep your existing DATABASE_URL from .env.local)
+DATABASE_URL=your_database_url_here
 ```
 
 ## Monitoring and Logs

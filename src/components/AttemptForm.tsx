@@ -21,6 +21,21 @@ interface AttemptFormProps {
 }
 
 export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
+  // Helper function to get temperature labels based on setup
+  const getTempLabels = (setup: 'iron-iron' | 'iron-silicon' | 'silicon-iron') => {
+    const materials = {
+      'iron-iron': { upper: 'železo', lower: 'železo' },
+      'iron-silicon': { upper: 'železo', lower: 'silikon' },
+      'silicon-iron': { upper: 'silikon', lower: 'železo' },
+    };
+
+    const { upper, lower } = materials[setup];
+    return {
+      upper: `Teplota (horní - ${upper})`,
+      lower: `Teplota (dolní - ${lower})`,
+    };
+  };
+
   // Zipper phase
   const [zipperTemp, setZipperTemp] = useState(150);
   const [zipperPressure, setZipperPressure] = useState(4.0);
@@ -285,7 +300,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 </RadioGroup>
               </div>
               <ParameterInput
-                label="Teplota (horní)"
+                label={getTempLabels(sideESetup).upper}
                 value={sideETempUpper}
                 onChange={(value) => {
                   setSideETempUpper(value);
@@ -300,7 +315,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="🌡️"
               />
               <ParameterInput
-                label="Teplota (dolní)"
+                label={getTempLabels(sideESetup).lower}
                 value={sideETempLower}
                 onChange={(value) => {
                   setSideETempLower(value);
@@ -363,7 +378,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 </RadioGroup>
               </div>
               <ParameterInput
-                label="Teplota (horní)"
+                label={getTempLabels(sideDSetup).upper}
                 value={sideDTempUpper}
                 onChange={(value) => {
                   setSideDTempUpper(value);
@@ -378,7 +393,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="🌡️"
               />
               <ParameterInput
-                label="Teplota (dolní)"
+                label={getTempLabels(sideDSetup).lower}
                 value={sideDTempLower}
                 onChange={(value) => {
                   setSideDTempLower(value);
@@ -441,7 +456,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 </RadioGroup>
               </div>
               <ParameterInput
-                label="Teplota (horní)"
+                label={getTempLabels(sideCSetup).upper}
                 value={sideCTempUpper}
                 onChange={(value) => {
                   setSideCTempUpper(value);
@@ -456,7 +471,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="🌡️"
               />
               <ParameterInput
-                label="Teplota (dolní)"
+                label={getTempLabels(sideCSetup).lower}
                 value={sideCTempLower}
                 onChange={(value) => {
                   setSideCTempLower(value);
@@ -519,7 +534,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 </RadioGroup>
               </div>
               <ParameterInput
-                label="Teplota (horní)"
+                label={getTempLabels(sideBSetup).upper}
                 value={sideBTempUpper}
                 onChange={(value) => {
                   setSideBTempUpper(value);
@@ -534,7 +549,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="🌡️"
               />
               <ParameterInput
-                label="Teplota (dolní)"
+                label={getTempLabels(sideBSetup).lower}
                 value={sideBTempLower}
                 onChange={(value) => {
                   setSideBTempLower(value);
@@ -597,7 +612,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 </RadioGroup>
               </div>
               <ParameterInput
-                label="Teplota (horní)"
+                label={getTempLabels(sideASetup).upper}
                 value={sideATempUpper}
                 onChange={(value) => {
                   setSideATempUpper(value);
@@ -612,7 +627,7 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 icon="🌡️"
               />
               <ParameterInput
-                label="Teplota (dolní)"
+                label={getTempLabels(sideASetup).lower}
                 value={sideATempLower}
                 onChange={(value) => {
                   setSideATempLower(value);

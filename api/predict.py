@@ -17,17 +17,20 @@ def load_model():
     Load ONNX model and encoders from Vercel Blob Storage.
     Cached to avoid reloading on warm function invocations.
     """
-    print("Loading model from Vercel Blob...")
+    print(f"Loading model from Vercel Blob... Model URL: {MODEL_BLOB_URL}")
 
     # Download ONNX model
     model_response = requests.get(MODEL_BLOB_URL)
+    print(f"Model download response: {model_response.status_code}")
     if model_response.status_code != 200:
-        raise Exception(f"Failed to download model: {model_response.status_code}")
+        raise Exception(f"Failed to download model: {model_response.status_code} from {MODEL_BLOB_URL}")
 
     # Download encoders
+    print(f"Downloading encoders from: {ENCODERS_BLOB_URL}")
     encoders_response = requests.get(ENCODERS_BLOB_URL)
+    print(f"Encoders download response: {encoders_response.status_code}")
     if encoders_response.status_code != 200:
-        raise Exception(f"Failed to download encoders: {encoders_response.status_code}")
+        raise Exception(f"Failed to download encoders: {encoders_response.status_code} from {ENCODERS_BLOB_URL}")
 
     # Load ONNX session
     session = ort.InferenceSession(model_response.content)

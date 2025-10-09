@@ -16,8 +16,10 @@ def load_model():
     Load ONNX model and encoders from Vercel Blob Storage.
     Cached to avoid reloading on warm function invocations.
     """
-    print("=== ENHANCED DEBUG VERSION 2.0 ===")
-    print("Starting load_model function")
+    print("=== ENHANCED DEBUG VERSION 2.0 - CACHE BUSTER ===")
+    print("Starting load_model function - FRESH DEPLOYMENT")
+    print(f"Current URLs - Model: {MODEL_BLOB_URL}")
+    print(f"Current URLs - Encoders: {ENCODERS_BLOB_URL}")
     print(f"MODEL_BLOB_URL: {MODEL_BLOB_URL}")
     print(f"ENCODERS_BLOB_URL: {ENCODERS_BLOB_URL}")
     print(f"Loading model from Vercel Blob... Model URL: {MODEL_BLOB_URL}")
@@ -135,7 +137,7 @@ def predict_parameters(material_type, print_coverage, package_size, sackovacka):
     return result
 
 class handler(BaseHTTPRequestHandler):
-    """Vercel serverless function handler"""
+    """Vercel serverless function handler - CACHE BUSTER v2.0"""
 
     def do_POST(self):
         try:

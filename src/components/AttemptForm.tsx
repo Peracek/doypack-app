@@ -201,9 +201,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               label="Tlak"
               value={zipperPressure}
               onChange={setZipperPressure}
-              min={1.0}
+              min={0}
               max={8.0}
-              step={0.1}
+              step={0.05}
               unit="bar"
               icon="⚡"
             />
@@ -245,9 +245,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
               label="Tlak"
               value={bottomPressure}
               onChange={setBottomPressure}
-              min={1.0}
+              min={0}
               max={8.0}
-              step={0.1}
+              step={0.05}
               unit="bar"
               icon="⚡"
             />
@@ -346,9 +346,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 label="Tlak"
                 value={sideEPressure}
                 onChange={setSideEPressure}
-                min={1.0}
+                min={0}
                 max={8.0}
-                step={0.1}
+                step={0.05}
                 unit="bar"
                 icon="⚡"
               />
@@ -424,9 +424,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 label="Tlak"
                 value={sideDPressure}
                 onChange={setSideDPressure}
-                min={1.0}
+                min={0}
                 max={8.0}
-                step={0.1}
+                step={0.05}
                 unit="bar"
                 icon="⚡"
               />
@@ -502,9 +502,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 label="Tlak"
                 value={sideCPressure}
                 onChange={setSideCPressure}
-                min={1.0}
+                min={0}
                 max={8.0}
-                step={0.1}
+                step={0.05}
                 unit="bar"
                 icon="⚡"
               />
@@ -580,9 +580,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 label="Tlak"
                 value={sideBPressure}
                 onChange={setSideBPressure}
-                min={1.0}
+                min={0}
                 max={8.0}
-                step={0.1}
+                step={0.05}
                 unit="bar"
                 icon="⚡"
               />
@@ -658,9 +658,9 @@ export default function AttemptForm({ orderId, onSuccess }: AttemptFormProps) {
                 label="Tlak"
                 value={sideAPressure}
                 onChange={setSideAPressure}
-                min={1.0}
+                min={0}
                 max={8.0}
-                step={0.1}
+                step={0.05}
                 unit="bar"
                 icon="⚡"
               />

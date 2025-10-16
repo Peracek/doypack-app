@@ -6,6 +6,7 @@ import { Button, Card, CardBody, CardHeader, Spinner, Accordion, AccordionItem, 
 import type { Order, Attempt } from '@/types';
 import { getPackageSizeLabel } from '@/types';
 import AttemptForm from '@/components/AttemptForm';
+import EditAttemptModal from '@/components/EditAttemptModal';
 import { getOrder, getAttempts, deleteAttempt } from '@/actions/orders';
 
 export default function OrderDetailPage() {
@@ -17,6 +18,7 @@ export default function OrderDetailPage() {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [editingAttempt, setEditingAttempt] = useState<Attempt | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const fetchOrderData = async () => {
@@ -40,6 +42,10 @@ export default function OrderDetailPage() {
   }, [orderId]);
 
   const handleAttemptCreated = () => {
+    fetchOrderData();
+  };
+
+  const handleAttemptUpdated = () => {
     fetchOrderData();
   };
 
@@ -344,7 +350,16 @@ export default function OrderDetailPage() {
                           </div>
                         )}
 
-                        <div className="flex justify-end pt-2">
+                        <div className="flex justify-end gap-2 pt-2">
+                          <Button
+                            color="primary"
+                            variant="light"
+                            size="md"
+                            onPress={() => setEditingAttempt(attempt)}
+                            className="h-10"
+                          >
+                            ✏️ Upravit
+                          </Button>
                           <Button
                             color="danger"
                             variant="light"
@@ -377,6 +392,17 @@ export default function OrderDetailPage() {
           </CardBody>
         </Card>
       </div>
+
+      {/* Edit Attempt Modal */}
+      {editingAttempt && (
+        <EditAttemptModal
+          isOpen={!!editingAttempt}
+          onClose={() => setEditingAttempt(null)}
+          attempt={editingAttempt}
+          orderId={orderId}
+          onSuccess={handleAttemptUpdated}
+        />
+      )}
     </div>
   );
 }

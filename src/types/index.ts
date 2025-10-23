@@ -142,10 +142,15 @@ export const MATERIAL_OPTIONS = [
 export const PACKAGE_SIZE_OPTIONS = [
   { label: '≥ 85 mm', value: 1 },
   { label: '≥ 90 mm', value: 2 },
-  { label: '≥ 130 mm', value: 3 },
-  { label: '≥ 160 mm', value: 4 },
-  { label: '≥ 180 mm', value: 5 },
-  { label: '≥ 230 mm', value: 6 },
+  { label: '≥ 110 mm', value: 3 },
+  { label: '≥ 130 mm', value: 4 },
+  { label: '≥ 160 mm', value: 5 },
+  { label: '≥ 180 mm', value: 6 },
+  { label: '≥ 200 mm', value: 7 },
+  { label: '≥ 210 mm', value: 8 },
+  { label: '≥ 230 mm', value: 9 },
+  { label: '≥ 260 mm', value: 10 },
+  { label: '≥ 270 mm', value: 11 },
 ];
 
 export const SACKOVACKA_OPTIONS = ['S1', 'S2', 'S3', 'S4'];

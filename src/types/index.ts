@@ -78,6 +78,15 @@ export interface CreateOrderInput {
   note?: string;
 }
 
+export interface UpdateOrderInput {
+  order_code: string;
+  material_type: string;
+  print_coverage: number;
+  package_size: number;
+  sackovacka: string;
+  note?: string;
+}
+
 export interface CreateAttemptInput {
   order_id: number;
   outcome: 'Úspěch' | 'Neúspěch';

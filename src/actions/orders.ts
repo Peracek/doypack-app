@@ -1,7 +1,7 @@
 'use server';
 
 import pool from '@/lib/db';
-import type { Order, Attempt, CreateOrderInput, CreateAttemptInput } from '@/types';
+import type { Order, Attempt, CreateOrderInput, UpdateOrderInput, CreateAttemptInput } from '@/types';
 import { revalidatePath } from 'next/cache';
 
 // Orders
@@ -51,6 +51,42 @@ export async function createOrder(data: CreateOrderInput): Promise<{ success: bo
     }
 
     return { success: false, error: 'Failed to create order' };
+  }
+}
+
+export async function updateOrder(id: number, data: UpdateOrderInput): Promise<{ success: boolean; order?: Order; error?: string }> {
+  const { order_code, material_type, print_coverage, package_size, sackovacka, note } = data;
+
+  // Validate required fields
+  if (!order_code || !material_type || print_coverage === undefined || !package_size || !sackovacka) {
+    return { success: false, error: 'Missing required fields' };
+  }
+
+  try {
+    const result = await pool.query<Order>(
+      `UPDATE orders
+       SET order_code = $2, material_type = $3, print_coverage = $4, package_size = $5, sackovacka = $6, note = $7
+       WHERE id = $1
+       RETURNING id, order_code, material_type, print_coverage, package_size, sackovacka, note, created_at`,
+      [id, order_code, material_type, print_coverage, package_size, sackovacka, note || null]
+    );
+
+    if (result.rowCount === 0) {
+      return { success: false, error: 'Order not found' };
+    }
+
+    revalidatePath('/');
+    revalidatePath(`/orders/${id}`);
+    return { success: true, order: result.rows[0] };
+  } catch (error: any) {
+    console.error('Error updating order:', error);
+
+    // Handle duplicate order_code
+    if (error.code === '23505') {
+      return { success: false, error: 'Order code already exists' };
+    }
+
+    return { success: false, error: 'Failed to update order' };
   }
 }
 

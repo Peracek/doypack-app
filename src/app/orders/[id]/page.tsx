@@ -7,6 +7,7 @@ import type { Order, Attempt } from '@/types';
 import { getPackageSizeLabel } from '@/types';
 import AttemptForm from '@/components/AttemptForm';
 import EditAttemptModal from '@/components/EditAttemptModal';
+import EditOrderModal from '@/components/EditOrderModal';
 import { getOrder, getAttempts, deleteAttempt } from '@/actions/orders';
 
 export default function OrderDetailPage() {
@@ -19,6 +20,7 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [editingAttempt, setEditingAttempt] = useState<Attempt | null>(null);
+  const [isEditingOrder, setIsEditingOrder] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const fetchOrderData = async () => {
@@ -46,6 +48,11 @@ export default function OrderDetailPage() {
   };
 
   const handleAttemptUpdated = () => {
+    fetchOrderData();
+  };
+
+  const handleOrderUpdated = () => {
+    setIsEditingOrder(false);
     fetchOrderData();
   };
 
@@ -135,8 +142,17 @@ export default function OrderDetailPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Order Details Card */}
         <Card>
-          <CardHeader className="pb-2">
-            <h2 className="text-lg font-bold">📋 Detaily zakázky</h2>
+          <CardHeader className="pb-2 flex flex-row items-center justify-between">
+            <h2 className="text-lg font-bold">Detaily zakázky</h2>
+            <Button
+              color="primary"
+              variant="light"
+              size="sm"
+              onPress={() => setIsEditingOrder(true)}
+              className="h-9"
+            >
+              Upravit
+            </Button>
           </CardHeader>
           <CardBody>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -401,6 +417,16 @@ export default function OrderDetailPage() {
           attempt={editingAttempt}
           orderId={orderId}
           onSuccess={handleAttemptUpdated}
+        />
+      )}
+
+      {/* Edit Order Modal */}
+      {order && (
+        <EditOrderModal
+          isOpen={isEditingOrder}
+          onClose={() => setIsEditingOrder(false)}
+          order={order}
+          onSuccess={handleOrderUpdated}
         />
       )}
     </div>
